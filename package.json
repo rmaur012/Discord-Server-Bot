@@ -4,5 +4,8 @@
   "description": "Discord bot for the FIU Smash 4 peeps.",
   "main": "TopTierBot.js",
   "author": "Rick",
-  "dependencies": {}
+  "dependencies": {
+    "discord.io": "github:woor/discord.io#gateway_v6",
+    "winston": "^2.4.0"
+  }
 }
