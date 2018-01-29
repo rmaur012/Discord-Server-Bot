@@ -1,0 +1,8 @@
+{
+  "name": "TopTierBOT",
+  "version": "1.0.0",
+  "description": "Discord bot for the FIU Smash 4 peeps.",
+  "main": "TopTierBot.js",
+  "author": "Rick",
+  "dependencies": {}
+}
