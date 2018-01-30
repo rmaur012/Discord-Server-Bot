@@ -55,6 +55,14 @@ bot.on('message', function (user, userID, channelID, message, evt) {
             case 'kh':
                 cb.kh_cmnd(bot, args, channelID);
                 break;
+                
+            case 'mv':
+                cb.mv_cmnd(bot, channelID);
+                break;
+                
+            case 'help':
+                cb.help_cmnd(bot, channelID);
+                break;
 
             default:
                 gf.sendMessage(bot, 'Just like target test in Smash 4, that command doesn\'t exist.', channelID);

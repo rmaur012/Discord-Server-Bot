@@ -7,7 +7,11 @@ var gf = require('./generalFunc.js');
 var quotes = ["\"You need to stop.\" -Joe", "\"Eddy, you're a FUCKING WEEB!\" -Jojo", "\"This is why I went to the math department.\" -Pablo", "\"Am I right fellas?\" -Danny", "\"Joe I'll do a $100 money match once I go 4-2, I swear to god. Eskeetit\" -Yoshi Main"];
 var quoteIndex = 0;
 
+//Each entry is [command, description]
+var commands = [["!hi", "Say hi to TopTierBot"], ["!quote", "Make TTB say a quote from someone"], ["!tourney (ao | vs | ecg)", "Get bracket and stream links for specified tournament"], ["!roll 1d(4|6|8|10|12|20|100)", "D&D roll for specific number"], ["!kh", "Get link to Kurogane Hammer website"], ["!mv", "Get link to Struz Smash Move Viewer"]];
 
+//var commands = ["!hi", "!quote", "!tourney (ao | vs | ecg)", "!roll 1d(4|6|8|10|12|20|100)", "!kh", "!mv"];
+//var descriptions = ["Say hi to TopTierBot", "Make TTB say a quote from someone", "Get bracket and stream links for specified tournament", "D&D roll for specific number", "Get link to Kurogane Hammer website", "Get link to Struz Smash Move Viewer"];
 
 
 //Each command has its own function below. 
@@ -129,7 +133,24 @@ module.exports = {
     },
     kh_cmnd: function (bot, args, channelID) {
         if (args.length == 0) {
-            sendMessage(bot, "Kurogane Hammer: http://kuroganehammer.com/Smash4", channelID);
+            gf.sendMessage(bot, "Kurogane Hammer: http://kuroganehammer.com/Smash4", channelID);
         }
+
+        //Add parts to search specific characters, if you wish
+
+    },
+    mv_cmnd: function (bot, channelID) {
+        gf.sendMessage(bot, "Struz Smash Move Viewer: https://struz.github.io/smash-move-viewer/", channelID);
+    },
+
+    
+
+    help_cmnd: function (bot, channelID) {
+        var helpStr = "Command Help Guide\n";
+        for(var i =0; i < commands.length; i++) {
+            helpStr += "**" + commands[i][0] + "** - " + commands[i][1] + "\n";
+        }
+        gf.sendMessage(bot, helpStr, channelID);
+
     }
 };
