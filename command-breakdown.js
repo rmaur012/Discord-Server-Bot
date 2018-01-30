@@ -18,10 +18,10 @@ var commands = [["!hi", "Say hi to TopTierBot"], ["!quote", "Make TTB say a quot
 //This serves to organize the functionality a bit better and have less clutter in the main script.
 module.exports = {
     hi_cmnd: function (bot, channelID) {
-        sendMessage(bot, 'Hello, I am TopTierBOT and I main Bayonetta. :)', channelID);
+        gf.sendMessage(bot, 'Hello, I am TopTierBOT and I main Bayonetta. :)', channelID);
     },
     quote_cmnd: function (bot, channelID) {
-        sendMessage(bot, quotes[quoteIndex], channelID);
+        gf.sendMessage(bot, quotes[quoteIndex], channelID);
         quoteIndex = quoteIndex + 1;
         if (quoteIndex == quotes.length) {
             quoteIndex = 0;
@@ -33,23 +33,23 @@ module.exports = {
             case 'ao':
             case 'AO':
                 {
-                    displayTourneyInfo(bot, tourneys.ao, channelID);
+                    gf.displayTourneyInfo(bot, tourneys.ao, channelID);
                 }
                 break;
             case 'vs':
             case 'VS':
                 {
-                    displayTourneyInfo(bot, tourneys.vs, channelID);
+                    gf.displayTourneyInfo(bot, tourneys.vs, channelID);
                 }
                 break;
             case 'ecg':
             case 'ECG':
                 {
-                    displayTourneyInfo(bot, tourneys.ecg, channelID);
+                    gf.displayTourneyInfo(bot, tourneys.ecg, channelID);
                 }
                 break;
             default:
-                sendMessage(bot, 'You didn\'t say which tournament.', channelID);
+                gf.sendMessage(bot, 'You didn\'t say which tournament.', channelID);
         }
     },
     roll_cmnd: function (bot, args, channelID) {
