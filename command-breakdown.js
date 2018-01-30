@@ -8,7 +8,7 @@ var quotes = ["\"You need to stop.\" -Joe", "\"Eddy, you're a FUCKING WEEB!\" -J
 var quoteIndex = 0;
 
 //Each entry is [command, description]
-var commands = [["!hi", "Say hi to TopTierBot"], ["!quote", "Make TTB say a quote from someone"], ["!tourney (ao | vs | ecg)", "Get bracket and stream links for specified tournament"], ["!roll 1d(4|6|8|10|12|20|100)", "D&D roll for specific number"], ["!kh", "Get link to Kurogane Hammer website"], ["!mv", "Get link to Struz Smash Move Viewer"]];
+var commands = [["!hi", "Say hi to TopTierBot"], ["!quote", "Make TTB say a quote from someone"], ["!tourney (ao | vs | ecg)", "Get bracket and stream links for specified tournament"], ["!roll 1d(4|6|8|10|12|20|100) (modifiers spaced out)", "D&D roll for specific number"], ["!kh", "Get link to Kurogane Hammer website"], ["!mv", "Get link to Struz Smash Move Viewer"]];
 
 //var commands = ["!hi", "!quote", "!tourney (ao | vs | ecg)", "!roll 1d(4|6|8|10|12|20|100)", "!kh", "!mv"];
 //var descriptions = ["Say hi to TopTierBot", "Make TTB say a quote from someone", "Get bracket and stream links for specified tournament", "D&D roll for specific number", "Get link to Kurogane Hammer website", "Get link to Struz Smash Move Viewer"];
@@ -56,9 +56,11 @@ module.exports = {
         var rollType = args[0];
         var highRoll = rollType.slice(2, 3);
         var num, maxNum;
+        var possibleModifier = "";
+        var modNum = 0;
 
         //For a 20 sided roll
-        if (highRoll == '2') {
+        if (highRoll == '2' && rollType.slice(3, 4) == '0') {
             maxNum = 20;
             num = gf.getRNGInteger(1, maxNum);
 
@@ -84,16 +86,35 @@ module.exports = {
         }
 
         if (num != 0) {
+            var addedNums = "";
+            if (args.length > 1) {
+                addedNums = "(" + num.toString();
+                var index = 1;
+                var toAdd;
+                while (index != args.length) {
+                    toAdd = parseInt(args[index]);
+                    num += toAdd;
+                    maxNum += toAdd;
+                    addedNums += ", " + args[index];
+                    index++;
+                }
+                addedNums += ")";
+            }
 
 
-            var rollStr = "You rolled a " + num.toString() + "! ";
-            if (num <= (maxNum / 4)) {
+            var quarter = maxNum / 4;
+            var half = maxNum / 2;
+            var threeFour = ((maxNum / 4) + (maxNum / 2));
+
+
+            var rollStr = "You rolled a " + num.toString() + "! " + addedNums + "\n";
+            if (num <= quarter) {
                 rollStr = rollStr + "You got bodied!";
-            } else if (num > (maxNum / 4) && num <= (maxNum / 2)) {
+            } else if (num > quarter && num <= half) {
                 rollStr = rollStr + "Ouch!";
-            } else if (num > (maxNum / 2) && num <= ((maxNum / 4) + (maxNum / 2))) {
+            } else if (num > half && num <= threeFour) {
                 rollStr = rollStr + "Not bad!";
-            } else if (num > ((maxNum / 4) + (maxNum / 2)) && num <= maxNum) {
+            } else if (num > threeFour && num <= maxNum) {
                 rollStr = rollStr + "DESTRUCTION!";
             }
 
@@ -143,11 +164,11 @@ module.exports = {
         gf.sendMessage(bot, "Struz Smash Move Viewer: https://struz.github.io/smash-move-viewer/", channelID);
     },
 
-    
+
 
     help_cmnd: function (bot, channelID) {
         var helpStr = "Command Help Guide\n";
-        for(var i =0; i < commands.length; i++) {
+        for (var i = 0; i < commands.length; i++) {
             helpStr += "**" + commands[i][0] + "** - " + commands[i][1] + "\n";
         }
         gf.sendMessage(bot, helpStr, channelID);
