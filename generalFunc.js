@@ -1,3 +1,10 @@
+function sendMessage(bot, reply, channelID) {
+        bot.sendMessage({
+            to: channelID,
+            message: reply
+        });
+    }
+
 module.exports = {
 
     getRNGInteger: function (min, max) {
