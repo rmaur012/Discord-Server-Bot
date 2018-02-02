@@ -4,7 +4,7 @@ var tourneys = require('./tourneys.json');
 var info = require('./info.json');
 var gf = require('./generalFunc.js');
 
-var quotes = ["\"You need to stop.\" -Joe", "\"Eddy, you're a FUCKING WEEB!\" -Jojo", "\"This is why I went to the math department.\" -Pablo", "\"Am I right fellas?\" -Danny", "\"Joe I'll do a $100 money match once I go 4-2, I swear to god. Eskeetit\" -Yoshi Main"];
+var quotes = ["\"You need to stop.\" -Joe", "\"Eddy, you're a FUCKING WEEB!\" -Jojo", "\"This is why I went to the math department.\" -Pablo", "\"Am I right fellas?\" -Danny", "\"Joe I'll do a $100 money match once I go 4-2, I swear to god. Eskeetit\" -Yoshi Main", "\"Ha ha ha. I SD'ed.\" -Pablo", "\"You better not have sweaty hands or you're going to the bathroom and cleaning hat shit.\" -Joe", "\"WOOOO, LOOK AT ME! I'M FOX McCLOUD BABY! HONEST!\" -Mida"];
 var quoteIndex = 0;
 
 //Each entry is [command, description]
@@ -53,13 +53,87 @@ module.exports = {
         }
     },
     roll_cmnd: function (bot, args, channelID) {
-        var rollType = args[0];
-        var highRoll = rollType.slice(2, 3);
-        var num, maxNum;
-        var possibleModifier = "";
-        var modNum = 0;
+        var hasArgs = true;
+        var rollType, findD;
+        if (args.length == 0) {
+            hasArgs = false;
+        } else {
+            rollType = args[0];
+            findD = rollType.indexOf("d");
+        }
 
-        //For a 20 sided roll
+        //If the "d" is the first character or the last, its a wrong command
+        if (!hasArgs || findD == 0 || findD == rollType.length - 1) {
+            gf.sendMessage(bot, "Dice roll is invalid. Let's just say you got a 1.", channelID);
+        } else {
+
+            var numOfRolls, num, highRoll;
+            if (findD > -1) {
+                numOfRolls = parseInt(rollType.slice(0, findD));
+                highRoll = parseInt(rollType.slice(findD + 1));
+            } else {
+                numOfRolls = 1;
+                highRoll = parseInt(rollType);
+            }
+            var maxNum;
+            var possibleModifier = "";
+            var modNum = 0;
+
+            //This part adds any modifiers that was added
+            var addedNums = "";
+            if (args.length > 1) {
+                var index = 1;
+                var toAdd;
+                while (index != args.length) {
+                    toAdd = parseInt(args[index]);
+                    modNum += toAdd;
+                    addedNums += ", " + args[index];
+                    index++;
+                }
+                addedNums += ")**";
+            }
+
+            var modString = "";
+            while (numOfRolls != 0) {
+                num = gf.getRNGInteger(1, highRoll);
+
+                //These are for the funny comments that are said once a player rolls
+                maxNum = highRoll + modNum;
+                var quarter = maxNum / 4;
+                var half = maxNum / 2;
+                var threeFour = ((maxNum / 4) + (maxNum / 2));
+
+                //This sets up the string that will display the roll and modifiers
+                if (args.length > 1) {
+                    modString = "**(" + num.toString() + addedNums;
+                } else {
+                    modString = "";
+                }
+
+                ////Add modifiers after making the string
+                num = num + modNum;
+
+                //This is for funny comment on roll
+                var rollStr = "You rolled a **" + num.toString() + "**! " + modString + "\n";
+                if (num <= quarter) {
+                    rollStr = rollStr + "You got bodied!";
+                } else if (num > quarter && num <= half) {
+                    rollStr = rollStr + "Ouch!";
+                } else if (num > half && num <= threeFour) {
+                    rollStr = rollStr + "Not bad!";
+                } else if (num > threeFour && num <= maxNum) {
+                    rollStr = rollStr + "DESTRUCTION!";
+                }
+
+                //Tell player about their roll
+                gf.sendMessage(bot, rollStr, channelID);
+
+                numOfRolls--;
+            }
+
+        }
+
+        /*For a 20 sided roll
         if (highRoll == '2' && rollType.slice(3, 4) == '0') {
             maxNum = 20;
             num = gf.getRNGInteger(1, maxNum);
@@ -107,7 +181,7 @@ module.exports = {
             var threeFour = ((maxNum / 4) + (maxNum / 2));
 
 
-            var rollStr = "You rolled a " + num.toString() + "! " + addedNums + "\n";
+            var rollStr = "You rolled a **" + num.toString() + "**! " + addedNums + "\n";
             if (num <= quarter) {
                 rollStr = rollStr + "You got bodied!";
             } else if (num > quarter && num <= half) {
@@ -124,7 +198,7 @@ module.exports = {
         } else {
             gf.sendMessage(bot, "Dice roll is invalid. Let's just say you got a 1.", channelID);
         }
-        /*switch (highRoll) {
+        switch (highRoll) {
             case '4':
             case '6':
             case '8':
