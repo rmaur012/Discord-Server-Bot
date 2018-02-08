@@ -3,8 +3,12 @@
 var tourneys = require('./tourneys.json');
 var info = require('./info.json');
 var gf = require('./generalFunc.js');
+var list = require('./cmnd_modules/cmnd_list.js');
+//var quote = require('./cmnd_modules/quote_cmnd.js');
 
-var quotes = ["\"You need to stop.\" -Joe", "\"Eddy, you're a FUCKING WEEB!\" -Jojo", "\"This is why I went to the math department.\" -Pablo", "\"Am I right fellas?\" -Danny", "\"Joe I'll do a $100 money match once I go 4-2, I swear to god. Eskeetit\" -Yoshi Main", "\"Ha ha ha. I SD'ed.\" -Pablo", "\"You better not have sweaty hands or you're going to the bathroom and cleaning hat shit.\" -Joe", "\"WOOOO, LOOK AT ME! I'M FOX McCLOUD BABY! HONEST!\" -Mida"];
+var cmnds = list.getMap();
+
+var quotes = ["\"You need to stop.\" -Joe", "\"Eddy, you're a FUCKING WEEB!\" -Jojo", "\"This is why I went to the math department.\" -Pablo", "\"Am I right fellas?\" -Danny", "\"Joe I'll do a $100 money match once I go 4-2, I swear to god. Eskeetit\" -Yoshi Main", "\"Ha ha ha. I SD'ed.\" -Pablo", "\"You better not have sweaty hands or you're going to the bathroom and cleaning that shit.\" -Joe", "\"WOOOO, LOOK AT ME! I'M FOX McCLOUD BABY! HONEST!\" -Mida"];
 var quoteIndex = 0;
 
 //Each entry is [command, description]
@@ -18,14 +22,10 @@ var commands = [["!hi", "Say hi to TopTierBot"], ["!quote", "Make TTB say a quot
 //This serves to organize the functionality a bit better and have less clutter in the main script.
 module.exports = {
     hi_cmnd: function (bot, channelID) {
-        gf.sendMessage(bot, 'Hello, I am TopTierBOT and I main Bayonetta. :)', channelID);
+        cmnds.hi.act(bot, channelID);
     },
     quote_cmnd: function (bot, channelID) {
-        gf.sendMessage(bot, quotes[quoteIndex], channelID);
-        quoteIndex = quoteIndex + 1;
-        if (quoteIndex == quotes.length) {
-            quoteIndex = 0;
-        }
+        cmnds.quote.act(bot, channelID);
     },
     tourney_cmnd: function (bot, args, channelID) {
         var type = args[0];
