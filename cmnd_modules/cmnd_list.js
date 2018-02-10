@@ -1,9 +1,23 @@
-var hi = require('./hi_cmnd.js');
-var quote = require('./quote_cmnd.js');
+const hi = require('./hi_cmnd.js');
+const quote = require('./quote_cmnd.js');
+const tourney = require('./tourney_cmnd.js');
+const roll = require('./roll_cmnd.js');
+const kh = require('./kh_cmnd.js');
+const mv = require('./mv_cmnd.js');
+const yt = require('./yt_cmnd.js');
+const help = require('./help_cmnd.js');
+const music = require('./music_cmnds.js');
 
 var map = {
     'hi': hi,
-    'quote': quote
+    'quote': quote,
+    'tourney': tourney,
+    'roll': roll,
+    'kh': kh,
+    'mv': mv,
+    'yt': yt,
+    'help': help,
+    'music': music
 };
 
 module.exports = {

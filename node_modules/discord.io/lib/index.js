@@ -2420,8 +2420,9 @@ function addToStreamBuffer(RStream, data) {
 
 function chooseAudioEncoder(players) {
 	if (!players[0]) return null;
-	var s = ChildProc.spawnSync(players.shift());
-	return s.error ? chooseAudioEncoder(players) : s.file;
+	var file = players.shift();
+	var s = ChildProc.spawnSync(file);
+	return s.error ? chooseAudioEncoder(players) : file;
 }
 function createAudioEncoder(ACBI, encoder) {
 	var enc = ACBI._systemEncoder;
