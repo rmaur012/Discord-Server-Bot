@@ -1,0 +1,5 @@
+Install the following (requires NodeJS):
+
+discord.js: npm install discord.js
+ytdl-core: npm install ytdl-core
+ffmpeg (for Windows): npm i ffmpeg-binaries
