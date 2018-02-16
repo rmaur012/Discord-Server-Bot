@@ -85,9 +85,13 @@ module.exports = {
     skip: function (message) {
         var server = servers[message.guild.id];
 
-        if (server.dispatcher) {
-            server.dispatcher.end();
-        }
+        server.dispatcher = con.playStream(ytdl(server.queue[0], {
+            filter: "audioonly"
+        }));
+        
+        //if (server.dispatcher) {
+        //    server.dispatcher.end();
+        //}
     },
     stop: function (message) {
         var server = servers[message.guild.id];
