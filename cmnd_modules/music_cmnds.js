@@ -15,6 +15,7 @@ function toPlay(con, msg) {
     server.queue.shift();
 
     server.dispatcher.on("end", function () {
+        console.log(server.queue.length);
         if (server.queue[0]) {
             toPlay(con, msg);
         } else {
