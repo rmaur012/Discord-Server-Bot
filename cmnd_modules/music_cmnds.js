@@ -7,15 +7,15 @@ var guildID;
 
 function toPlay(con, msg) {
     var server = servers[msg.guild.id];
-    console.log(server.queue + ":a");
+    
     server.dispatcher = con.playStream(ytdl(server.queue[0], {
         filter: "audioonly"
     }));
-    console.log(server.queue + ":b");
+    
     server.queue.shift();
-    console.log(server.queue + ":c");
+    
     server.dispatcher.on("end", function () {
-        console.log(server.queue.length);
+        
         if (server.queue[0]) {
             toPlay(con, msg);
         } else {
@@ -47,7 +47,6 @@ module.exports = {
         var server = servers[message.guild.id];
 
         server.queue.push(args[0]);
-        //console.log(server.queue);
 
         if (!message.guild.voiceConnection) {
             message.member.voiceChannel.join().then(function (connection) {
@@ -66,7 +65,7 @@ module.exports = {
             };
         }
         var server = servers[message.guild.id];
-        //console.log(server);
+        
         var songtitle, info; 
         
         if(server.queue.length == 0){
