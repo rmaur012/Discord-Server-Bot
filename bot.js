@@ -51,7 +51,7 @@ bot.on("message", (message) => {
                 cmnds.tourney.act(args, msgChannel);
                 break;
 
-            case 'roll':
+            case 'r':
                 cmnds.roll.act(args, msgChannel);
                 break;
 
