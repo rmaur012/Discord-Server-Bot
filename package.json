@@ -1,9 +1,10 @@
 {
-  "name": "Dis_Bot_2",
+  "name": "TopTierBOT",
   "version": "1.1.0",
   "description": "Dicord Bot for fun and friends.",
-  "main": "index.js",
+  "main": "bot.js",
   "scripts": {
+    "start": "node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

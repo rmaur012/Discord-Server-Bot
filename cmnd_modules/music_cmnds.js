@@ -6,14 +6,13 @@ var servers = [];
 var guildID;
 
 function toPlay(con, msg) {
-    var server = servers[msg.guild.id];
-
+    
     server.dispatcher = con.playStream(ytdl(server.queue[0], {
         filter: "audioonly"
     }));
-
+    
     server.queue.shift();
-
+    
     server.dispatcher.on("end", function () {
         if (server.queue[0]) {
             toPlay(con, msg);
@@ -46,7 +45,6 @@ module.exports = {
         var server = servers[message.guild.id];
 
         server.queue.push(args[0]);
-        console.log(server.queue);
 
         if (!message.guild.voiceConnection) {
             message.member.voiceChannel.join().then(function (connection) {
@@ -65,7 +63,6 @@ module.exports = {
             };
         }
         var server = servers[message.guild.id];
-        //console.log(server);
         var songtitle, info; 
         
         if(server.queue.length == 0){
@@ -84,9 +81,13 @@ module.exports = {
     skip: function (message) {
         var server = servers[message.guild.id];
 
-        if (server.dispatcher) {
-            server.dispatcher.end();
-        }
+        server.dispatcher = con.playStream(ytdl(server.queue[0], {
+            filter: "audioonly"
+        }));
+        
+        //if (server.dispatcher) {
+        //    server.dispatcher.end();
+        //}
     },
     stop: function (message) {
         var server = servers[message.guild.id];
