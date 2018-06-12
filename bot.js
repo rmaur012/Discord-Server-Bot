@@ -8,8 +8,6 @@ var cmnds = list.getMap();
 
 const bot = new Discord.Client();
 
-
-
 /* Configure logger settings
 logger.remove(logger.transports.Console);
 logger.add(logger.transports.Console, {
@@ -36,7 +34,7 @@ bot.on("message", (message) => {
 
         args = args.splice(1);
 
-        //If you add a command here, write the logic of the function in the command-breakdown.js file
+        //If you add a command here, write the logic of the function in its own js file then link it to cmnd_list.js
         switch (cmd) {
 
             case 'hi':
@@ -97,6 +95,14 @@ bot.on("message", (message) => {
                 break;
                 //======================================
 
+            case 'roulette':
+                cmnds.roulette.act(msgChannel);
+                break;
+            
+            case 'shoot':
+                cmnds.roulette.shoot(msgChannel);
+                break;
+                
             default:
                 gf.sendMessage('Just like target test in Smash 4, that command doesn\'t exist.', msgChannel);
                 // Just add any case commands if you want to..

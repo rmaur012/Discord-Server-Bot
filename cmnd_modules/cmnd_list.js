@@ -7,6 +7,7 @@ const mv = require('./mv_cmnd.js');
 const yt = require('./yt_cmnd.js');
 const help = require('./help_cmnd.js');
 const poll = require('./poll_cmnds.js');
+const roulette = require('./roulette_cmnd.js');
 
 const music = require('./music_cmnds.js');
 
@@ -20,7 +21,7 @@ var cmndMap = {
     'yt': yt,
     'help': help,
     'poll': poll,
-    
+    'roulette': roulette,
     'music': music
 };
 
