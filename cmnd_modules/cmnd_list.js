@@ -8,6 +8,7 @@ const yt = require('./yt_cmnd.js');
 const help = require('./help_cmnd.js');
 const poll = require('./poll_cmnds.js');
 const roulette = require('./roulette_cmnd.js');
+const framedata = require('./framedata_cmnd.js');
 
 const music = require('./music_cmnds.js');
 
@@ -22,7 +23,8 @@ var cmndMap = {
     'help': help,
     'poll': poll,
     'roulette': roulette,
-    'music': music
+    'music': music,
+    'frame': framedata
 };
 
 module.exports = {

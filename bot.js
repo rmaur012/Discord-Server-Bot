@@ -30,7 +30,7 @@ bot.on("message", (message) => {
 
     if (message.content.substring(0, 1) == '!') {
         var args = message.content.substring(1).split(' ');
-        var cmd = args[0];
+        var cmd = args[0].toLowerCase();
 
         args = args.splice(1);
 
@@ -102,9 +102,14 @@ bot.on("message", (message) => {
             case 'shoot':
                 cmnds.roulette.shoot(msgChannel);
                 break;
+                //======================================
+                
+            case 'frame':
+                cmnds.frame.act(args, msgChannel);
+                break;
                 
             default:
-                gf.sendMessage('Just like target test in Smash 4, that command doesn\'t exist.', msgChannel);
+                gf.sendMessage('Just like target test in Smash 4 and ultimate, that command doesn\'t exist.', msgChannel);
                 // Just add any case commands if you want to..
         }
     }
