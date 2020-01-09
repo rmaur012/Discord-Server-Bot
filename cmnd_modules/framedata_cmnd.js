@@ -73,7 +73,7 @@ var specialUrlEntries = {
     'ridley':'ridley',
     'rob':'rob',
     'robin':'robin',
-    'rosa':'rosalina_and_lume',
+    'rosa':'rosalina_and_luma',
     'roy':'roy',
     'ryu':'ryu',
     'samus':'samus',
@@ -106,7 +106,7 @@ module.exports = {
             return ;
         }
         
-        var characterURLExtension = specialUrlEntries[args[0].toLowerCase];
+        var characterURLExtension = specialUrlEntries[args[0].toLowerCase()];
         
         if(characterURLExtension == undefined) {
            gf.sendMessage("Who this? Couldn't find them.", msgChannel);
