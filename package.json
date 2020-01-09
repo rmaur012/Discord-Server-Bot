@@ -7,6 +7,9 @@
     "start": "node bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+    "engines": {
+    "node": "8.9.4"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -17,6 +20,8 @@
     "ffmpeg-binaries": "^3.2.2-3",
     "opusscript": "0.0.6",
     "winston": "^2.4.0",
-    "ytdl-core": "^0.20.1"
+    "ytdl-core": "^0.20.1",
+    "tar": ">=2.2.2",
+    "extend": ">=3.0.2"
   }
 }
