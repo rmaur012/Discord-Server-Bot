@@ -38,6 +38,10 @@ bot.on("message", (message) => {
         switch (cmd) {
 
             case 'hi':
+                if(msgChannel == "general") {
+                   gf.sendMessage("THIS IS GENERAL", msgChannel);
+                }
+                
                 cmnds.hi.act(msgChannel);
                 break;
 
