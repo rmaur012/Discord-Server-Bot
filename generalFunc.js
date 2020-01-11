@@ -8,5 +8,11 @@ module.exports = {
     },
     sendMessage: function (reply, messageChannel) {
         messageChannel.send(reply);
+    },
+    checkIfProperChannel: function (allowedChannel, messageChannel) {
+        if(allowedChannel == messageChannel.name) {
+            return true;
+        }
+        return false;
     }
 };

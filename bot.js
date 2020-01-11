@@ -27,6 +27,8 @@ bot.on("message", (message) => {
         message.channel.send("pong!");
     }*/
     var msgChannel = message.channel;
+    
+    var enabledCheckingForChannelNames = true;
 
     if (message.content.substring(0, 1) == '!') {
         var args = message.content.substring(1).split(' ');
@@ -38,10 +40,6 @@ bot.on("message", (message) => {
         switch (cmd) {
 
             case 'hi':
-                if(msgChannel == "general") {
-                   gf.sendMessage("THIS IS GENERAL: " + msgChannel, msgChannel);
-                }
-                
                 cmnds.hi.act(msgChannel);
                 break;
 
@@ -100,12 +98,22 @@ bot.on("message", (message) => {
                 //======================================
 
             case 'roulette':
-                cmnds.roulette.act(msgChannel);
-                break;
+                if(enabledCheckingForChannelNames && gf.checkIfProperChannel("roulette",msgChannel)) {
+                    cmnds.roulette.act(msgChannel);
+                    break;
+                } else {
+                    gf.sendMessage("Please go to the roulette channel to play!", msgChannel);
+                    break;
+                }
             
             case 'shoot':
-                cmnds.roulette.shoot(msgChannel);
-                break;
+                if(enabledCheckingForChannelNames && gf.checkIfProperChannel("roulette",msgChannel)) {
+                    cmnds.roulette.shoot(msgChannel);
+                    break;
+                } else {
+                    gf.sendMessage("Please go to the roulette channel to play!", msgChannel);
+                    break;
+                }
                 //======================================
                 
             case 'frame':
@@ -113,7 +121,7 @@ bot.on("message", (message) => {
                 break;
                 
             default:
-                gf.sendMessage('Just like target test in Smash 4 and ultimate, that command doesn\'t exist.', msgChannel);
+                gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
                 // Just add any case commands if you want to..
         }
     }
