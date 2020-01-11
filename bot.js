@@ -39,7 +39,7 @@ bot.on("message", (message) => {
 
             case 'hi':
                 if(msgChannel == "general") {
-                   gf.sendMessage("THIS IS GENERAL", msgChannel);
+                   gf.sendMessage("THIS IS GENERAL: " + msgChannel, msgChannel);
                 }
                 
                 cmnds.hi.act(msgChannel);
