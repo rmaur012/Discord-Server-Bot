@@ -9,6 +9,7 @@ const help = require('./help_cmnd.js');
 const poll = require('./poll_cmnds.js');
 const roulette = require('./roulette_cmnd.js');
 const framedata = require('./framedata_cmnd.js');
+const levers = require('./lever_cmnds.js');
 
 const music = require('./music_cmnds.js');
 
@@ -24,7 +25,8 @@ var cmndMap = {
     'poll': poll,
     'roulette': roulette,
     'music': music,
-    'frame': framedata
+    'frame': framedata,
+    'lever': levers
 };
 
 module.exports = {

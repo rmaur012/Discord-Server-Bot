@@ -120,6 +120,10 @@ bot.on("message", (message) => {
                 cmnds.frame.act(args, msgChannel);
                 break;
                 
+            case 'lvr':
+                cmnds.lever.act(args, msgChannel);
+                break;
+                
             default:
                 gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
                 // Just add any case commands if you want to..
