@@ -3,15 +3,16 @@ var gf = require('../generalFunc.js');
 //Each entry is [command, description]
 var commands = [["!hi", "Say hi to TopTierBot"], 
                 ["!quote", "Make TTB say a quote from someone"], 
-                ["!tourney (ao | vs | ecg)", "Get bracket and stream links for specified tournament"], 
+                ["!tourney (ao | vs | ecg | mcc)", "Get bracket and stream links for specified tournament"], 
                 ["!r (Any number greater than 1) (modifiers spaced out afterwards)", "D&D roll for specific number"], 
                 ["!poll (Write a yes or on question here)", "A simple poll question will be stated with a thumbs up and down reaction for people to select"],
-                ["!kh", "Get link to Kurogane Hammer website"], 
-                ["!mv", "Get link to Struz Smash Move Viewer"],
+//                ["!kh", "Get link to Kurogane Hammer website"], 
+//                ["!mv", "Get link to Struz Smash Move Viewer"],
                 ["!yt (bsd | msc | jpl)", "Gives you a link to Beefy Smash Doods, My Smash Corner, and Joe's playlist, respectively."],
                 ["!roulette", "^Starts a round of russian roulette! After this, someone enters '!shoot' to pull the trigger"],
                 ["!shoot", "^Pulls the trigger of a russian roulette session. Must call '!roulette' before this command."],
-                ["!frame", "Gives link to the ultimate frame data page for a character. Some characters have special ways to write, like `Dark Pit` as dpit, `Duck Hunt` as dhunt, or common abbreviations like icis or zss."]];
+                ["!frame", "Gives link to the ultimate frame data page for a character. Some characters have special ways to write, like `Dark Pit` as dpit, `Duck Hunt` as dhunt, or common abbreviations like icis or zss."],
+                ["!lvr (start [#] | left | color)", "Starts a lever game! *start #* will start the game with the # of players. *left* shows the remaining levers. *color* is the color of the lever to select it."]];
 
 module.exports = {
     act: function (msgChannel) {

@@ -10,5 +10,9 @@
     "ecg": {
         "challonge": "http://eastcoastgaming.challonge.com/",
         "stream": "https://www.twitch.tv/eastcoastgamingfl"
+    },
+    "MCC": {
+        "challonge": "http://mccomics.challonge.com/",
+        "stream": "Unavailable"
     }
 }

@@ -8,7 +8,10 @@ var quotes = ["\"You need to stop.\" -Joe",
               "\"Ha ha ha. I SD'ed.\" -Pablo",
               "\"You better not have sweaty hands or you're going to the bathroom and cleaning that shit.\" -Joe",
               "\"WOOOO, LOOK AT ME! I'M FOX McCLOUD BABY! HONEST!\" -Mida",
-              "\"I came to fuck his bitch, but his bitch fucked me.\" -Pablo"];
+              "\"I came to fuck his bitch, but his bitch fucked me.\" -Pablo",
+              "\"Why do you look like that?!\" -Juanpi",
+              "\"What the crap!\" -Alwahab",
+             "\"*Paul complaining*\" -Paul"];
 
 module.exports = {
     act: function (msgChannel) {
