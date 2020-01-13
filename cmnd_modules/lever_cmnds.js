@@ -146,22 +146,24 @@ module.exports = {
                     unpressedLevers = unpressedLevers - 1;
 
                     if (unpressedLevers == 1) {
+                        setTimeout(function () {
+                            gf.sendMessage("Bomb found! Resetting levers!", msgChannel);
+                        }, 3000);
+                        
                         bomb = activeLevers[Math.floor(Math.random() * activeLevers.length)][0];
 
                         //Revert each lever left over back to the `unpressed` status
-                        for (var i = 0; i < ala.length; i = i + 1) {
+                        for (var i = 0; i < activeLevers.length; i = i + 1) {
                             activeLevers[i][1] = false;
                         }
                         unpressedLevers = activeLevers.length;
-                        
-                        gf.sendMessage("Bomb found! Resetting levers!", msgChannel);
                     }
 
 
                     var leversString = printLeversLeft(activeLevers);
                     setTimeout(function () {
                         gf.sendMessage("Remaining lever(s): " + leversString, msgChannel);
-                    }, 1900);
+                    }, 3000);
                     return;
                 }
             }
