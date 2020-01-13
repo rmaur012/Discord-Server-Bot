@@ -98,7 +98,7 @@ bot.on("message", (message) => {
                 //======================================
 
             case 'roulette':
-                if(enabledCheckingForChannelNames && gf.checkIfProperChannel("roulette",msgChannel)) {
+                if(gf.checkIfProperChannel("roulette",msgChannel, enabledCheckingForChannelNames)) {
                     cmnds.roulette.act(msgChannel);
                     break;
                 } else {
@@ -107,13 +107,12 @@ bot.on("message", (message) => {
                 }
             
             case 'shoot':
-                if(enabledCheckingForChannelNames && gf.checkIfProperChannel("roulette",msgChannel)) {
+                if(gf.checkIfProperChannel("roulette",msgChannel, enabledCheckingForChannelNames)) {
                     cmnds.roulette.shoot(msgChannel);
-                    break;
                 } else {
                     gf.sendMessage("Please go to the roulette channel to play!", msgChannel);
-                    break;
                 }
+                break;
                 //======================================
                 
             case 'frame':
@@ -121,7 +120,11 @@ bot.on("message", (message) => {
                 break;
                 
             case 'lvr':
-                cmnds.lever.act(args, msgChannel);
+                if(gf.checkIfProperChannel("lever",msgChannel, enabledCheckingForChannelNames)) {
+                    cmnds.lever.act(args, msgChannel);
+                } else {
+                    gf.sendMessage("Please go to the lever channel to play!", msgChannel);
+                }
                 break;
                 
             default:

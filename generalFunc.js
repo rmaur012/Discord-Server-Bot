@@ -9,7 +9,11 @@ module.exports = {
     sendMessage: function (reply, messageChannel) {
         messageChannel.send(reply);
     },
-    checkIfProperChannel: function (allowedChannel, messageChannel) {
+    checkIfProperChannel: function (allowedChannel, messageChannel, checkingEnabled) {
+        if(!checkingEnabled){
+           return true;
+        }
+        
         if(allowedChannel == messageChannel.name) {
             return true;
         }
