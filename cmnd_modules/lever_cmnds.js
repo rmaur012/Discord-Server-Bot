@@ -21,7 +21,7 @@ function printLeversLeft(leversArray) {
     for (var i = 0; i < leversArray.length; i++) {
         // If lever has not been pressed (meaning false).
         if (!activeLevers[i][1]) {
-                leverString = leverString + activeLevers[i][0] + " ";
+            leverString = leverString + activeLevers[i][0] + " ";
         }
     }
 
@@ -41,9 +41,9 @@ function resetLevers(leverIndex, activeLeversArray) {
     var ala = activeLeversArray;
     ala.splice(leverIndex, 1);
     var newBomb = ala[Math.floor(Math.random() * ala.length)][0];
-    
+
     //Revert each lever left over back to the `unpressed` status
-    for(var i = 0; i < ala.length; i = i +1){
+    for (var i = 0; i < ala.length; i = i + 1) {
         ala[i][1] = false;
     }
     return [ala, newBomb];
@@ -71,7 +71,7 @@ module.exports = {
             gf.sendMessage("What do you want to do/ in the game?", msgChannel);
             return;
         }
-        
+
         var command = args[0].toLowerCase();
 
 
@@ -100,16 +100,16 @@ module.exports = {
 
             gf.sendMessage("The " + leverString + " levers have been set!", msgChannel);
             return;
-            
+
         } else if (activeLevers.length == 0) {
             gf.sendMessage("No game is active. You can start one with *!lvr start (# of players)*!", msgChannel);
             return;
-            
+
         } else if (command == "left" || command == "colors") {
             var leversString = printLeversLeft(activeLevers);
             gf.sendMessage("The remaining lever(s) are " + leversString, msgChannel);
             return;
-            
+
         } else {
             var leverLocation = findIndexOfLever(activeLevers, command);
             if (leverLocation == -1) {
@@ -144,6 +144,20 @@ module.exports = {
 
                     activeLevers[leverLocation][1] = true;
                     unpressedLevers = unpressedLevers - 1;
+
+                    if (unpressedLevers == 1) {
+                        bomb = activeLevers[Math.floor(Math.random() * activeLevers.length)][0];
+
+                        //Revert each lever left over back to the `unpressed` status
+                        for (var i = 0; i < ala.length; i = i + 1) {
+                            activeLevers[i][1] = false;
+                        }
+                        unpressedLevers = activeLevers.length;
+                        
+                        gf.sendMessage("Bomb found! Resetting levers!", msgChannel);
+                    }
+
+
                     var leversString = printLeversLeft(activeLevers);
                     setTimeout(function () {
                         gf.sendMessage("Remaining lever(s): " + leversString, msgChannel);
