@@ -12,7 +12,10 @@ var commands = [["!hi", "Say hi to TopTierBot"],
                 ["!roulette", "^Starts a round of russian roulette! After this, someone enters '!shoot' to pull the trigger"],
                 ["!shoot", "^Pulls the trigger of a russian roulette session. Must call '!roulette' before this command."],
                 ["!frame", "Gives link to the ultimate frame data page for a character. Some characters have special ways to write, like `Dark Pit` as dpit, `Duck Hunt` as dhunt, or common abbreviations like icis or zss."],
-                ["!lvr (start [#] | left | color)", "Starts a lever game! *start #* will start the game with the # of players. *left* shows the remaining levers. *color* is the color of the lever to select it."]];
+                ["!lvr (start [#] | left | color)", "Starts a lever game! *start #* will start the game with the # of players. *left* shows the remaining levers. *color* is the color of the lever to select it."],
+               ["!stages", "Gives you a link to the stage comparison page from Tournameta. You can see how big some stages are to others."],
+               ["!dict (term)","Enter a terminology to learn what it means! If it's two or more words, put them all together. Ex. `tech skill` is entered as `techskill`"],
+               ["!ruleset [vs | ao | mcc]","Enter the command followed by either vs, ao, or mcc to print the ruleset for that tournament."]];
 
 module.exports = {
     act: function (msgChannel) {
