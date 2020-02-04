@@ -5,6 +5,7 @@ var specialUrlEntries = {
     'bayo':'bayonetta',
     'bayonetta':'bayonetta',
     'bowser':'bowser',
+    'byleth':'byleth',
     'jr':'bowser_jr',
     'falcon':'captain_falcon',
     'chrom':'chrom',

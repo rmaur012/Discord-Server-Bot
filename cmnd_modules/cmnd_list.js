@@ -10,6 +10,9 @@ const poll = require('./poll_cmnds.js');
 const roulette = require('./roulette_cmnd.js');
 const framedata = require('./framedata_cmnd.js');
 const levers = require('./lever_cmnds.js');
+const stages = require('./stages_cmnd.js');
+const dict = require('./dictionary_cmnd.js');
+const ruleset = require('./ruleset_cmnd.js');
 
 const music = require('./music_cmnds.js');
 
@@ -26,7 +29,10 @@ var cmndMap = {
     'roulette': roulette,
     'music': music,
     'frame': framedata,
-    'lever': levers
+    'lever': levers,
+    'stages': stages,
+    'dict': dict,
+    'ruleset': ruleset
 };
 
 module.exports = {

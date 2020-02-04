@@ -127,6 +127,18 @@ bot.on("message", (message) => {
                 }
                 break;
                 
+            case 'stages':
+                cmnds.stages.act(msgChannel);
+                break;
+                
+            case 'dict':
+                cmnds.dict.act(args, msgChannel);
+                break;
+                
+            case 'ruleset':
+                cmnds.ruleset.act(args, msgChannel);
+                break;
+                
             default:
                 gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
                 // Just add any case commands if you want to..
