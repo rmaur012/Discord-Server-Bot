@@ -35,6 +35,11 @@ module.exports = {
                     displayTourneyInfo(tourneys.mcc, msgChannel);
                 }
                 break;
+            case 'champloo':
+                {
+                    displayTourneyInfo(tourneys.champloo, msgChannel);
+                }
+                break;
             default:
                 gf.sendMessage('Could not find tournament info.', msgChannel);
         }

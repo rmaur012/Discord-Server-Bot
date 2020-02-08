@@ -1,18 +1,22 @@
 {
     "ao": {
-        "challonge": "https://arcadeodyssey.challonge.com/",
+        "challonge": "https://arcadeodyssey.challonge.com/tournaments",
         "stream": "https://www.twitch.tv/arcadeodyssey"
     },
     "vs": {
-        "challonge": "https://versus.challonge.com/",
+        "challonge": "https://versus.challonge.com/tournaments",
         "stream": "https://www.twitch.tv/vsgc"
     },
     "ecg": {
-        "challonge": "http://eastcoastgaming.challonge.com/",
+        "challonge": "http://eastcoastgaming.challonge.com/tournaments",
         "stream": "https://www.twitch.tv/eastcoastgamingfl"
     },
-    "MCC": {
-        "challonge": "http://mccomics.challonge.com/",
+    "mcc": {
+        "challonge": "http://mccomics.challonge.com/tournaments",
         "stream": "Unavailable"
+    },
+    "champloo": {
+        "challonge": "https://champloogaming.challonge.com/tournaments",
+        "stream": "https://www.twitch.tv/champloogamingtv"
     }
 }
