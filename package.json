@@ -16,12 +16,13 @@
   "dependencies": {
     "discord.io": "github:woor/discord.io#gateway_v6",
     "discord.js": "^11.3.0",
+    "extend": ">=3.0.2",
     "ffmpeg": "0.0.4",
     "ffmpeg-binaries": "^3.2.2-3",
+    "googleapis": "^39.2.0",
     "opusscript": "0.0.6",
-    "winston": "^2.4.0",
-    "ytdl-core": "^0.20.1",
     "tar": ">=4.4.2",
-    "extend": ">=3.0.2"
+    "winston": "^2.4.0",
+    "ytdl-core": "^0.20.1"
   }
 }
