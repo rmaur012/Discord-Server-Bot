@@ -144,11 +144,9 @@ bot.on("message", (message) => {
                     //cmnds.notes.write(args.splice(1), msgChannel);
                     gf.sendMessage("Coming Soon!", msgChannel);
                 } else if (args[0] != undefined && args[0].toLowerCase() == 'sc') {
-//                    cmnds.notes.setCode(args.splice(1), msgChannel);
-                    gf.sendMessage("Coming Soon!", msgChannel);
+                    cmnds.notes.setCode(args.splice(1), msgChannel);
                 } else {
-//                    cmnds.notes.read(args, msgChannel);
-                    gf.sendMessage("Coming Soon!", msgChannel);
+                    cmnds.notes.read(args, msgChannel);
                 }
                 break;
 
