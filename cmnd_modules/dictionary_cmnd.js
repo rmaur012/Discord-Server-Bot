@@ -2,10 +2,12 @@ var gf = require('../generalFunc.js');
 
 var dictionaryEntries = {
     '50/50':'_50/50_: Represents the chance you have of guessing what your opponent is going to do and you react to the guess in a scenario where guessing right will let you escape but guessing wrong will get you hit.',
+    'advantage':'_Advantage_: A state in which a player has more options than their opponent in a given senario. Example: When your opponent is on ledge, you have more options like retreating, ledge trapping, or going for a ledge trump.',
     'bait':'_Baiting_: The act of trying to trick the opponent into doing an action that the player can then punish them for.',
     'baiting':'_Baiting_: The act of trying to trick the opponent into doing an action that the player can then punish them for.',
     'combo':'_Combo_: A series of attacks strung together in succession.',
     'confirm':'_Confirm_: This involves throwing out a fast and safe attack such that if it misses you should be fine but if it hits, you\'ll be able to react to this and string the hit into an attack that otherwise would have been unsafe to throw out just by itself due to the lag being easily punishable.',
+    'disadvantage':'_Disadvantage_: A state in which a player has less options than their opponent in a given scenario. Example: When you are grabbing ledge, you do not have the option to retreat and must select a ledge option which the opponent can be ready for.',
     'dsr':'_Dave\'s Stupid Rule_: A tournament rule that prevents one from counterpicking to a stage he/she already won on/last won on depending on which version is used.',
     'edgeguarding':'_Edgeguarding_: The attempt to prevent an offstage recovering opponent from reaching the stage, thus causing them to be KO\'d.',
     'hitstun':'_Hitstun_: The time you cannot take any action after being hit.',

@@ -1,5 +1,5 @@
 const gf = require('../generalFunc.js');
-const tourneys = require('../tourneys.json');
+const tourneys = require('../cmnd_helpers/tourneys.json');
 
 function displayTourneyInfo(place, msgChannel) {
     gf.sendMessage('Challonge: ' + place.challonge + '\nStream: ' + place.stream, msgChannel);

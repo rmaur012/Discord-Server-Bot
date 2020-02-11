@@ -27,7 +27,7 @@ bot.on("message", (message) => {
         message.channel.send("pong!");
     }*/
     var msgChannel = message.channel;
-    
+
     var enabledCheckingForChannelNames = true;
 
     if (message.content.substring(0, 1) == '!') {
@@ -83,62 +83,75 @@ bot.on("message", (message) => {
             case 'play':
                 cmnds.music.play(args, message);
                 break;
-            
+
             case 'queue':
                 cmnds.music.queue(message);
                 break;
-                
+
             case 'skip':
                 cmnds.music.skip(message);
                 break;
-                
+
             case 'stop':
                 cmnds.music.stop(message);
                 break;
                 //======================================
 
             case 'roulette':
-                if(gf.checkIfProperChannel("roulette",msgChannel, enabledCheckingForChannelNames)) {
+                if (gf.checkIfProperChannel("roulette", msgChannel, enabledCheckingForChannelNames)) {
                     cmnds.roulette.act(msgChannel);
                     break;
                 } else {
                     gf.sendMessage("Please go to the roulette channel to play!", msgChannel);
                     break;
                 }
-            
+
             case 'shoot':
-                if(gf.checkIfProperChannel("roulette",msgChannel, enabledCheckingForChannelNames)) {
+                if (gf.checkIfProperChannel("roulette", msgChannel, enabledCheckingForChannelNames)) {
                     cmnds.roulette.shoot(msgChannel);
                 } else {
                     gf.sendMessage("Please go to the roulette channel to play!", msgChannel);
                 }
                 break;
                 //======================================
-                
+
             case 'frame':
                 cmnds.frame.act(args, msgChannel);
                 break;
-                
+
             case 'lvr':
-                if(gf.checkIfProperChannel("lever",msgChannel, enabledCheckingForChannelNames)) {
+                if (gf.checkIfProperChannel("lever", msgChannel, enabledCheckingForChannelNames)) {
                     cmnds.lever.act(args, msgChannel);
                 } else {
                     gf.sendMessage("Please go to the lever channel to play!", msgChannel);
                 }
                 break;
-                
+
             case 'stages':
                 cmnds.stages.act(msgChannel);
                 break;
-                
+
             case 'dict':
                 cmnds.dict.act(args, msgChannel);
                 break;
-                
+
             case 'ruleset':
                 cmnds.ruleset.act(args, msgChannel);
                 break;
-                
+
+            case 'notes':
+                if (args[0] != undefined && args[0].toLowerCase() == 'w') {
+                    //cmnds.notes.write(args.splice(1), msgChannel);
+                    gf.sendMessage("Coming Soon!", msgChannel);
+                } else if (args[0] != undefined && args[0].toLowerCase() == 'sc') {
+//                    cmnds.notes.setCode(args.splice(1), msgChannel);
+                    gf.sendMessage("Coming Soon!", msgChannel);
+                } else {
+//                    cmnds.notes.read(args, msgChannel);
+                    gf.sendMessage("Coming Soon!", msgChannel);
+                }
+                break;
+
             default:
                 gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
                 // Just add any case commands if you want to..
@@ -149,4 +162,3 @@ bot.on("message", (message) => {
 
 //bot.login(auth.token);
 bot.login(process.env.BOT_TOKEN);
-

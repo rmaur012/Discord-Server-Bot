@@ -21,6 +21,7 @@
     "ffmpeg-binaries": "^3.2.2-3",
     "googleapis": "^39.2.0",
     "opusscript": "0.0.6",
+    "request": "2.88.0",
     "tar": ">=4.4.2",
     "winston": "^2.4.0",
     "ytdl-core": "^0.20.1"

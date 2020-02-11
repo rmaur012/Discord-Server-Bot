@@ -13,6 +13,7 @@ const levers = require('./lever_cmnds.js');
 const stages = require('./stages_cmnd.js');
 const dict = require('./dictionary_cmnd.js');
 const ruleset = require('./ruleset_cmnd.js');
+//const notes = require('./notes_cmnd.js');
 
 const music = require('./music_cmnds.js');
 
@@ -33,6 +34,7 @@ var cmndMap = {
     'stages': stages,
     'dict': dict,
     'ruleset': ruleset
+//    'notes':notes
 };
 
 module.exports = {
