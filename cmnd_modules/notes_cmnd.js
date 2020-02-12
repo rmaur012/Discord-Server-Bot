@@ -426,22 +426,39 @@ function writeMUNotes(auth, args, channel) {
     var matchupRange = 'Matchup Notes!' + x_axis[args[1].toLowerCase()] + y_axis[args[0].toLowerCase()];
     console.log('Range is: ' + matchupRange);
 
-    var body = {
-        values: [[generateWriteString(args)]]
-    };
-
     const sheets = google.sheets({
         version: 'v4',
         auth
     });
 
-    sheets.spreadsheets.values.update({
+    sheets.spreadsheets.values.get({
         spreadsheetId: process.env.SPREADSHEET_ID,
         range: matchupRange,
-        valueInputOption: 'RAW',
-        resource: body
-    }).then((response) => {
-        gf.sendMessage(`${response.updatedCells} Cell Updated!`, channel);
+    }, (err, res) => {
+        if (err)
+            //gf.sendMessage(`Something went wrong: ${err}`, msgChannel);
+            return console.log('The API returned an error: ' + err);
+        const rows = res.data.values;
+        if (rows != undefined && rows.length) {
+            // Print columns A and E, which correspond to indices 0 and 4.
+            rows.map((row) => {
+                var body = {
+                    values: [[row[0] + "\n\n" + generateWriteString(args)]]
+                };
+
+                sheets.spreadsheets.values.update({
+                    spreadsheetId: process.env.SPREADSHEET_ID,
+                    range: matchupRange,
+                    valueInputOption: 'RAW',
+                    resource: body
+                }).then((response) => {
+                    console.log("Response is: " + response);
+                    gf.sendMessage(`Cell Updated!`, channel);
+                });
+            });
+        } else {
+            gf.sendMessage("No notes found.", channel);
+        }
     });
 }
 
