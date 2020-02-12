@@ -486,10 +486,10 @@ module.exports = {
 
     write: function (args, msgChannel) {
         if (args.length == 0) {
-            gf.sendMessage("What character matchup notes do you want to read?", msgChannel);
+            gf.sendMessage("What character matchup notes do you want to write on?", msgChannel);
             return;
         } else if (args.length == 1) {
-            gf.sendMessage("I need the 2 characters in order to lookup the matchup notes.", msgChannel);
+            gf.sendMessage("I need the 2 characters in order to write to the matchup notes.", msgChannel);
             return;
         } else if (args.length == 2) {
             gf.sendMessage("What are your notes that you want to write for this matchup?", msgChannel);

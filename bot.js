@@ -140,15 +140,24 @@ bot.on("message", (message) => {
                 break;
 
             case 'notes':
-                if (args[0] != undefined && args[0].toLowerCase() == 'w') {
-                    cmnds.notes.write(args.splice(1), msgChannel);
-                } else if (args[0] != undefined && args[0].toLowerCase() == 'sc') {
-                    cmnds.notes.setCode(args.splice(1), msgChannel);
+                if (gf.checkIfProperChannel("notes", msgChannel, enabledCheckingForChannelNames)) {
+                    if (args[0] != undefined && args[0].toLowerCase() == 'w') {
+                        cmnds.notes.write(args.splice(1), msgChannel);
+                    } else if (args[0] != undefined && args[0].toLowerCase() == 'wg') {
+                        var splicedArgs = args.splice(1);
+                        var charArgs = [args[1]];
+                        var finalArgs = charArgs.concat(splicedArgs);
+                        cmnds.notes.write(finalArgs, msgChannel);
+                    } else if (args[0] != undefined && args[0].toLowerCase() == 'sc') {
+                        cmnds.notes.setCode(args.splice(1), msgChannel);
+                    } else {
+                        cmnds.notes.read(args, msgChannel);
+                    }
                 } else {
-                    cmnds.notes.read(args, msgChannel);
+                    gf.sendMessage("Please go to the notes channel for all note requests!", msgChannel);
                 }
                 break;
-                
+
             case 'pr':
                 cmnds.pr.act(msgChannel);
                 break;
