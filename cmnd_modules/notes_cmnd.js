@@ -428,8 +428,8 @@ module.exports = {
             gf.sendMessage("What character matchup notes do you want to read?", msgChannel);
             return;
         } else if (args.length == 1) {
-            gf.sendMessage("I need the 2 characters in order to lookup the matchup notes.", msgChannel);
-            return;
+            args.push(args[0]);
+            console.log(args);
         }
         if (x_axis[args[1].toLowerCase()] != undefined && y_axis[args[0].toLowerCase()] != undefined) {
             loadAndRunRead(args, msgChannel);

@@ -149,6 +149,10 @@ bot.on("message", (message) => {
                     cmnds.notes.read(args, msgChannel);
                 }
                 break;
+                
+            case 'pr':
+                cmnds.pr.act(msgChannel);
+                break;
 
             default:
                 gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
