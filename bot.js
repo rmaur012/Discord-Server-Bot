@@ -141,8 +141,7 @@ bot.on("message", (message) => {
 
             case 'notes':
                 if (args[0] != undefined && args[0].toLowerCase() == 'w') {
-                    //cmnds.notes.write(args.splice(1), msgChannel);
-                    gf.sendMessage("Coming Soon!", msgChannel);
+                    cmnds.notes.write(args.splice(1), msgChannel);
                 } else if (args[0] != undefined && args[0].toLowerCase() == 'sc') {
                     cmnds.notes.setCode(args.splice(1), msgChannel);
                 } else {

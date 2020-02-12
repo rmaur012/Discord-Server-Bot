@@ -252,13 +252,15 @@ function loadAndRunRead(args, channel) {
     //    });
 }
 
-function loadAndRunWrite(args) {
+function loadAndRunWrite(args, channel) {
+    authorize(JSON.parse(process.env.CREDENTIALS_JSON), writeMUNotes, args, channel);
+
     // Load client secrets from a local file.
-    fs.readFile('credentials.json', (err, content) => {
-        if (err) return console.log('Error loading client secret file:', err);
-        // Authorize a client with credentials, then call the Google Sheets API.
-        authorize(JSON.parse(content), writeMUNotes, args);
-    });
+    //    fs.readFile('credentials.json', (err, content) => {
+    //        if (err) return console.log('Error loading client secret file:', err);
+    //        // Authorize a client with credentials, then call the Google Sheets API.
+    //        authorize(JSON.parse(content), writeMUNotes, args);
+    //    });
 }
 
 /**
@@ -342,7 +344,7 @@ function setNewToken(credentials, code, channel) {
         oAuth2Client.getToken(code, (err, token) => {
             if (err) return console.error('Error while trying to retrieve access token', err);
             oAuth2Client.setCredentials(token);
-            
+
             console.log("Token is: " + JSON.stringify(token));
 
             // HTTP request to set the token as a config variable on Heroku
@@ -410,10 +412,36 @@ function readMUNotes(auth, args, channel) {
     });
 }
 
-function writeMUNotes(auth, args) {
+function generateWriteString(args) {
+    var theStr = "";
+
+    for (var i = 2; i < args.length; i = i + 1) {
+        theStr = theStr + args[i] + " ";
+    }
+    return theStr;
+
+}
+
+function writeMUNotes(auth, args, channel) {
+    var matchupRange = 'Matchup Notes!' + x_axis[args[1].toLowerCase()] + y_axis[args[0].toLowerCase()];
+    console.log('Range is: ' + matchupRange);
+
+    var body = {
+        values: [[generateWriteString(args)]]
+    };
+
     const sheets = google.sheets({
         version: 'v4',
         auth
+    });
+
+    sheets.spreadsheets.values.update({
+        spreadsheetId: process.env.SPREADSHEET_ID,
+        range: matchupRange,
+        valueInputOption: 'RAW',
+        resource: body
+    }).then((response) => {
+        gf.sendMessage(`${response.updatedCells} Cell Updated!`, channel);
     });
 }
 
@@ -447,8 +475,14 @@ module.exports = {
             gf.sendMessage("I need the 2 characters in order to lookup the matchup notes.", msgChannel);
             return;
         } else if (args.length == 2) {
-            gf.sendMessage("Ensure you write the names of the 2 characters and your name as the author to write your notes.", msgChannel);
+            gf.sendMessage("What are your notes that you want to write for this matchup?", msgChannel);
             return;
+        }
+
+        if (x_axis[args[1].toLowerCase()] != undefined && y_axis[args[0].toLowerCase()] != undefined) {
+            loadAndRunWrite(args, msgChannel);
+        } else {
+            gf.sendMessage("One or both characters submitted is invalid.", msgChannel);
         }
     },
 
