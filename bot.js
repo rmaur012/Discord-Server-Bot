@@ -144,8 +144,9 @@ bot.on("message", (message) => {
                     if (args[0] != undefined && args[0].toLowerCase() == 'w') {
                         cmnds.notes.write(args.splice(1), msgChannel);
                     } else if (args[0] != undefined && args[0].toLowerCase() == 'wg') {
+                        var character = args[1];
                         var splicedArgs = args.splice(1);
-                        var charArgs = [args[1]];
+                        var charArgs = [character];
                         var finalArgs = charArgs.concat(splicedArgs);
                         cmnds.notes.write(finalArgs, msgChannel);
                     } else if (args[0] != undefined && args[0].toLowerCase() == 'sc') {

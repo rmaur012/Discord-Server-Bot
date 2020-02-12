@@ -386,7 +386,7 @@ function setNewToken(credentials, code, channel) {
 
 function readMUNotes(auth, args, channel) {
     var matchupRange = 'Matchup Notes!' + x_axis[args[1].toLowerCase()] + y_axis[args[0].toLowerCase()];
-    console.log('Range is: ' + matchupRange);
+    console.log('Read Range is: ' + matchupRange);
 
     const sheets = google.sheets({
         version: 'v4',
@@ -422,9 +422,21 @@ function generateWriteString(args) {
 
 }
 
+function writeToCell(sheets, body, matchupRange, channel) {
+    sheets.spreadsheets.values.update({
+        spreadsheetId: process.env.SPREADSHEET_ID,
+        range: matchupRange,
+        valueInputOption: 'RAW',
+        resource: body
+    }).then((response) => {
+        console.log("Response is: " + response);
+        gf.sendMessage(`Cell Updated!`, channel);
+    });
+}
+
 function writeMUNotes(auth, args, channel) {
     var matchupRange = 'Matchup Notes!' + x_axis[args[1].toLowerCase()] + y_axis[args[0].toLowerCase()];
-    console.log('Range is: ' + matchupRange);
+    console.log('Write Range is: ' + matchupRange);
 
     const sheets = google.sheets({
         version: 'v4',
@@ -445,19 +457,13 @@ function writeMUNotes(auth, args, channel) {
                 var body = {
                     values: [[row[0] + "\n\n" + generateWriteString(args)]]
                 };
-
-                sheets.spreadsheets.values.update({
-                    spreadsheetId: process.env.SPREADSHEET_ID,
-                    range: matchupRange,
-                    valueInputOption: 'RAW',
-                    resource: body
-                }).then((response) => {
-                    console.log("Response is: " + response);
-                    gf.sendMessage(`Cell Updated!`, channel);
-                });
+                writeToCell(sheets, body, matchupRange, channel);
             });
         } else {
-            gf.sendMessage("No notes found.", channel);
+            var body = {
+                values: [[generateWriteString(args)]]
+            };
+            writeToCell(sheets, body, matchupRange, channel);
         }
     });
 }
@@ -495,7 +501,7 @@ module.exports = {
             gf.sendMessage("What are your notes that you want to write for this matchup?", msgChannel);
             return;
         }
-
+        console.log("Found args: " + args);
         if (x_axis[args[1].toLowerCase()] != undefined && y_axis[args[0].toLowerCase()] != undefined) {
             loadAndRunWrite(args, msgChannel);
         } else {
