@@ -64,7 +64,7 @@ bot.on("message", (message) => {
                 break;
 
             case 'help':
-                cmnds.help.act(msgChannel);
+                cmnds.help.act(args, msgChannel);
                 break;
 
             case 'yt':
