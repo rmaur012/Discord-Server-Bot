@@ -28,7 +28,7 @@ module.exports = {
             gf.sendMessage("**Bang!**", msgChannel);
             gunLoaded = false;
         } else {
-            bulletChamber = bulletChamber - 1;
+            bulletChamber = Math.floor(Math.random() * 6);
             gf.sendMessage("*Blank*", msgChannel);
         }
     }
