@@ -15,6 +15,7 @@ const dict = require('./dictionary_cmnd.js');
 const ruleset = require('./ruleset_cmnd.js');
 const notes = require('./notes_cmnd.js');
 const pr = require('./pr_cmnd.js');
+const twitch = require('./twitch_cmnd.js');
 
 const music = require('./music_cmnds.js');
 
@@ -36,7 +37,8 @@ var cmndMap = {
     'dict': dict,
     'ruleset': ruleset,
     'notes':notes,
-    'pr':pr
+    'pr':pr,
+    'twitch':twitch
 };
 
 module.exports = {
