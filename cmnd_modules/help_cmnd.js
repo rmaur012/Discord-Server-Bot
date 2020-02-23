@@ -1,6 +1,6 @@
 var gf = require('../generalFunc.js');
 
-var cmndsString = 'hi, quote, tourney, r, poll, kh, mv, yt, roulette, shoot, frame, lvr, stages, dict, ruleset, pr, and notes.';
+var cmndsString = 'hi, quote, tourney, r, poll, kh, mv, yt, roulette, shoot, frame, lvr, stages, dict, ruleset, pr, tw, and notes.';
 
 //var commands = [["!hi", "Say hi to TopTierBot"],
 //                ["!quote", "Make TTB say a quote from someone"],
@@ -117,6 +117,10 @@ module.exports = {
 
             case 'pr':
                 gf.sendMessage('The `!pr` command gives you the list of SFL PR members for the last season.', msgChannel);
+                return;
+                
+            case 'tw':
+                gf.sendMessage('`!tw (channel1) (channel2) (channel3) (channel4)` - Gives you link to twitch channels you specify. Putting 1 channel will take you to that twitch channel. Entering 2-4 channels will give you the multitwitch link.', msgChannel);
                 return;
 
             default:
