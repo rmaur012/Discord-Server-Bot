@@ -18,5 +18,9 @@
     "champloo": {
         "challonge": "https://champloogaming.challonge.com/tournaments",
         "stream": "https://www.twitch.tv/champloogamingtv"
+    },
+    "gypsy": {
+        "challonge": "https://challonge.com/users/gypsymoonvapinbrews/tournaments",
+        "stream": "https://www.twitch.tv/gypsymoontv"
     }
 }
