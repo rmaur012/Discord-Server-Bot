@@ -2,7 +2,7 @@ const gf = require('../generalFunc.js');
 const tourneys = require('../cmnd_helpers/tourneys.json');
 
 function displayTourneyInfo(place, msgChannel) {
-    gf.sendMessage('Challonge: ' + place.challonge + '\nStream: ' + place.stream, msgChannel);
+    gf.sendMessage('Bracket: ' + place.bracket + '\nStream: ' + place.stream, msgChannel);
 }
 
 module.exports = {
@@ -43,6 +43,18 @@ module.exports = {
             case 'gypsy':
                 {
                     displayTourneyInfo(tourneys.gypsy, msgChannel);
+                }
+                break;
+            case 'rex':
+                {
+                    displayTourneyInfo(tourneys.rex, msgChannel);
+                }
+                break;
+            case 'flynns':
+            case 'flynn\'s':
+            case 'flynn':
+                {
+                    displayTourneyInfo(tourneys.flynns, msgChannel);
                 }
                 break;
             default:

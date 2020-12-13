@@ -1,26 +1,34 @@
 {
     "ao": {
-        "challonge": "https://arcadeodyssey.challonge.com/tournaments",
+        "bracket": "https://arcadeodyssey.challonge.com/tournaments",
         "stream": "https://www.twitch.tv/arcadeodyssey"
     },
     "vs": {
-        "challonge": "https://versus.challonge.com/tournaments",
+        "bracket": "RIP VS \nhttps://versus.challonge.com/tournaments",
         "stream": "https://www.twitch.tv/vsgc"
     },
     "ecg": {
-        "challonge": "http://ecgc.challonge.com/tournaments",
+        "bracket": "http://ecgc.challonge.com/tournaments",
         "stream": "https://www.twitch.tv/eastcoastgamingfl"
     },
     "mcc": {
-        "challonge": "http://mccomics.challonge.com/tournaments",
+        "bracket": "http://mccomics.challonge.com/tournaments",
         "stream": "Unavailable"
     },
     "champloo": {
-        "challonge": "https://champloogaming.challonge.com/tournaments",
+        "bracket": "https://champloogaming.challonge.com/tournaments",
         "stream": "https://www.twitch.tv/champloogamingtv"
     },
     "gypsy": {
-        "challonge": "https://challonge.com/users/gypsymoonvapinbrews/tournaments",
+        "bracket": "https://challonge.com/users/gypsymoonvapinbrews/tournaments",
         "stream": "https://www.twitch.tv/gypsymoontv"
+    },
+    "rex": {
+        "bracket": "Search for Rex Baron in the search bar in Smash.gg\nhttps://smash.gg/",
+        "stream": "https://www.twitch.tv/rexbaronboca"
+    },
+    "flynns": {
+        "bracket": "https://challonge.com/users/sadigo/tournaments",
+        "stream": "https://www.twitch.tv/flynnsgamingfl"
     }
 }
