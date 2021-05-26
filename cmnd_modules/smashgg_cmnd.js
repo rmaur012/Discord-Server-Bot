@@ -193,7 +193,7 @@ function getTop8ByArgs(args, msgChannel) {
             i = i + 1;
         }
         if (body) {
-            gf.sendMessage("POG: " + formattedEntrants, msgChannel);
+            gf.sendMessage(formattedEntrants, msgChannel);
         } else {
             gf.sendMessage("No body found in reply.", msgChannel);
             console.log('error: ' + response.statusCode)
