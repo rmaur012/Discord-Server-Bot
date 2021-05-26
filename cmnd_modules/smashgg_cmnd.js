@@ -33,7 +33,8 @@ function getTotalAttendees(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-            Authorization: `Bearer ${token.sggToken}`,
+//            Authorization: `Bearer ${token.sggToken}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -97,7 +98,8 @@ function getTop8(args, msgChannel) {
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
             //Accept: 'application/vnd.heroku+json; version=3',
-            Authorization: `Bearer ${token.sggToken}`,
+//            Authorization: `Bearer ${token.sggToken}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -109,6 +111,7 @@ function getTop8(args, msgChannel) {
             },
         })
     }, function (error, response, body) {
+        console.log("body: "+ body);
         var resBody = JSON.parse(body);
         var entrants = resBody.data.tournaments.nodes[0].events[0].standings.nodes;
         var formattedEntrants = "";
@@ -163,7 +166,8 @@ function getTop8ByArgs(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-            Authorization: `Bearer ${token.sggToken}`,
+//            Authorization: `Bearer ${token.sggToken}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
