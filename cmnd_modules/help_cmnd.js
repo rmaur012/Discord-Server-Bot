@@ -1,6 +1,6 @@
 var gf = require('../generalFunc.js');
 
-var cmndsString = 'hi, quote, tourney, r, poll, kh, mv, yt, roulette, shoot, frame, lvr, stages, dict, ruleset, pr, tw, and notes.';
+var cmndsString = 'hi, quote, tourney, r, poll, kh, mv, yt, roulette, shoot, frame, lvr, stages, dict, ruleset, pr, tw, sgg, and notes.';
 
 //var commands = [["!hi", "Say hi to TopTierBot"],
 //                ["!quote", "Make TTB say a quote from someone"],
@@ -121,6 +121,10 @@ module.exports = {
                 
             case 'tw':
                 gf.sendMessage('`!tw (channel1) (channel2) (channel3) (channel4)` - Gives you link to twitch channels you specify. Putting 1 channel will take you to that twitch channel. Entering 2-4 channels will give you the multitwitch link.', msgChannel);
+                return;
+                
+            case 'sgg':
+                gf.sendMessage('`!sgg [att|t8] (tourney name)` - `att` gives you the number of attendants to a specified tournament, which is required. `t8` gives the top 8 and their seed for a specified tournament. If `t8` isn\'t given a tournament, it will assume you want the latest Rex Baron results.', msgChannel);
                 return;
 
             default:

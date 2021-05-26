@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 var logger = require('winston');
-//const auth = require('./auth.json');
+const auth = require('./auth.json');
 const list = require('./cmnd_modules/cmnd_list.js');
 const gf = require('./generalFunc.js');
 
@@ -165,6 +165,10 @@ bot.on("message", (message) => {
                 
             case 'tw':
                 cmnds.twitch.act(args, msgChannel);
+                break;
+                
+            case 'sgg':
+                cmnds.sgg.act(args, msgChannel);
                 break;
 
             default:

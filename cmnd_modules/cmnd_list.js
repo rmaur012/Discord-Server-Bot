@@ -16,6 +16,7 @@ const ruleset = require('./ruleset_cmnd.js');
 const notes = require('./notes_cmnd.js');
 const pr = require('./pr_cmnd.js');
 const twitch = require('./twitch_cmnd.js');
+const sgg = require('./smashgg_cmnd.js');
 
 const music = require('./music_cmnds.js');
 
@@ -38,7 +39,8 @@ var cmndMap = {
     'ruleset': ruleset,
     'notes':notes,
     'pr':pr,
-    'twitch':twitch
+    'twitch':twitch,
+    'sgg':sgg
 };
 
 module.exports = {
