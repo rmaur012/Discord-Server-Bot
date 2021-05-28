@@ -117,16 +117,26 @@ function getTop8(args, msgChannel) {
         var resBody = JSON.parse(body);
 
         var i = 0;
-        while (resBody.data.tournaments.nodes[0].events[].numEntrants != "Smash Ultimate") {
+        var found = false;
+        while (i < resBody.data.tournament.events.length) {
+            if (resBody.data.tournaments.nodes[0].events[i].name == "Smash Ultimate") {
+                found = true;
+                break;
+            }
             i = i + 1;
+        }
+
+        if (!found) {
+            gf.sendMessage("Could not find Smash Ultimate tournament.", msgChannel);
+            return;
         }
 
         var entrants = resBody.data.tournaments.nodes[0].events[i].standings.nodes;
         // For some reason, past tournaments have the first entry as empty while currently happening tournaments are the first entry. 
-//        if (resBody.data.tournaments.nodes[0].events[0].standings.nodes.length != 0) {
-//            entrants = resBody.data.tournaments.nodes[0].events[0].standings.nodes;
-//        } else {
-//            entrants = resBody.data.tournaments.nodes[0].events[i].standings.nodes;
+        //        if (resBody.data.tournaments.nodes[0].events[0].standings.nodes.length != 0) {
+        //            entrants = resBody.data.tournaments.nodes[0].events[0].standings.nodes;
+        //        } else {
+        //            entrants = resBody.data.tournaments.nodes[0].events[i].standings.nodes;
         var formattedEntrants = "Total Entrants: " + resBody.data.tournaments.nodes[0].events[i].numEntrants + "\n";
         i = 0;
         while (i < entrants.length) {
@@ -157,6 +167,8 @@ function getTop8ByArgs(args, msgChannel) {
     id
     name
     events{
+        name
+        numEntrants
         standings(query: {
       perPage: $perPageStandings
     }){
@@ -192,6 +204,14 @@ function getTop8ByArgs(args, msgChannel) {
         })
     }, function (error, response, body) {
         var resBody = JSON.parse(body);
+
+        var i = 0;
+        while (resBody.data.tournament.events[i].names != "Smash Ultimate" && i < resBody.data.tournament.events.length) {
+            i = i + 1;
+        }
+
+        var entrants = resBody.data.tournament.events[1].standings.nodes;
+
         var entrants;
         // For some reason, past tournaments have the first entry as empty while currently happening tournaments are the first entry. 
         if (resBody.data.tournament.events[0].standings.nodes.length != 0) {
