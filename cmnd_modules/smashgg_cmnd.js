@@ -117,7 +117,7 @@ function getTop8(args, msgChannel) {
         var resBody = JSON.parse(body);
 
         var i = 0;
-        while (resBody.data.tournaments.nodes[0].events[0].numEntrants != "Smash Ultimate") {
+        while (resBody.data.tournaments.nodes[0].events[].numEntrants != "Smash Ultimate") {
             i = i + 1;
         }
 
