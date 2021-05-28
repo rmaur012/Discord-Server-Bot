@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 var logger = require('winston');
-//const auth = require('./auth.json');
+const auth = require('./auth.json');
 const list = require('./cmnd_modules/cmnd_list.js');
 const gf = require('./generalFunc.js');
 
@@ -179,5 +179,5 @@ bot.on("message", (message) => {
 });
 
 
-//bot.login(auth.token);
-bot.login(process.env.BOT_TOKEN);
+bot.login(auth.token);
+//bot.login(process.env.BOT_TOKEN);

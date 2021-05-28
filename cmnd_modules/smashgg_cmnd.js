@@ -2,8 +2,8 @@ const gf = require('../generalFunc.js');
 const request = require('request');
 const sggVariables = require('../cmnd_helpers/smashgg.json');
 
-const token = process.env.SMASHGG_TOKEN;
-//const token = require('../smashggToken.json');
+//const token = process.env.SMASHGG_TOKEN;
+const token = require('../smashggToken.json');
 
 var {
     graphql,
@@ -100,8 +100,8 @@ function getTop8(args, msgChannel) {
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
             //Accept: 'application/vnd.heroku+json; version=3',
-            //            Authorization: `Bearer ${token.sggToken}`,
-            Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${token.sggToken}`,
+//            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -118,8 +118,7 @@ function getTop8(args, msgChannel) {
 
         var i = 0;
         var found = false;
-        while (i < resBody.data.tournaments.nodes[0].events[i].name) {
-            console.log("Name: " + resBody.data.tournaments.nodes[0].events[i].name);
+        while (i < resBody.data.tournaments.nodes[0].events.length) {
             if (resBody.data.tournaments.nodes[0].events[i].name == "Smash Ultimate") {
                 found = true;
                 break;
@@ -133,12 +132,7 @@ function getTop8(args, msgChannel) {
         }
 
         var entrants = resBody.data.tournaments.nodes[0].events[i].standings.nodes;
-        // For some reason, past tournaments have the first entry as empty while currently happening tournaments are the first entry. 
-        //        if (resBody.data.tournaments.nodes[0].events[0].standings.nodes.length != 0) {
-        //            entrants = resBody.data.tournaments.nodes[0].events[0].standings.nodes;
-        //        } else {
-        //            entrants = resBody.data.tournaments.nodes[0].events[i].standings.nodes;
-        var formattedEntrants = "Total Entrants: " + resBody.data.tournaments.nodes[0].events[i].numEntrants + "\n";
+        var formattedEntrants = resBody.data.tournaments.nodes[0].name + " (" + resBody.data.tournaments.nodes[0].events[i].numEntrants + " Entrants)\n";
         i = 0;
         while (i < entrants.length) {
             formattedEntrants = formattedEntrants + entrants[i].entrant.seeds[0].placement + ". " + entrants[i].entrant.name + " (#" + entrants[i].entrant.seeds[0].seedNum + ")\n"
