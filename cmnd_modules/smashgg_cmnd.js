@@ -119,6 +119,7 @@ function getTop8(args, msgChannel) {
         var i = 0;
         var found = false;
         while (i < resBody.data.tournaments.nodes[0].events[i].name) {
+            console.log("Name: " + resBody.data.tournaments.nodes[0].events[i].name);
             if (resBody.data.tournaments.nodes[0].events[i].name == "Smash Ultimate") {
                 found = true;
                 break;
