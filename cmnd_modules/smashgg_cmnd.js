@@ -33,7 +33,7 @@ function getTotalAttendees(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-//            Authorization: `Bearer ${token.sggToken}`,
+            //            Authorization: `Bearer ${token.sggToken}`,
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
@@ -74,6 +74,8 @@ function getTop8(args, msgChannel) {
       id
       name
       events{
+        name
+        numEntrants
         standings(query: {
       perPage: $perPageStandings
     }){
@@ -98,7 +100,7 @@ function getTop8(args, msgChannel) {
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
             //Accept: 'application/vnd.heroku+json; version=3',
-//            Authorization: `Bearer ${token.sggToken}`,
+            //            Authorization: `Bearer ${token.sggToken}`,
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
@@ -111,17 +113,22 @@ function getTop8(args, msgChannel) {
             },
         })
     }, function (error, response, body) {
-        console.log("body: "+ body);
+        //console.log("body: "+ body);
         var resBody = JSON.parse(body);
-        var entrants;
-        // For some reason, past tournaments have the first entry as empty while currently happening tournaments are the first entry. 
-        if (resBody.data.tournaments.nodes[0].events[0].standings.nodes.length != 0) {
-            entrants = resBody.data.tournaments.nodes[0].events[0].standings.nodes;
-        } else {
-            entrants = resBody.data.tournaments.nodes[0].events[1].standings.nodes;
-        }
-        var formattedEntrants = "";
+
         var i = 0;
+        while (resBody.data.tournaments.nodes[0].events[0].numEntrants != "Smash Ultimate") {
+            i = i + 1;
+        }
+
+        var entrants = resBody.data.tournaments.nodes[0].events[i].standings.nodes;
+        // For some reason, past tournaments have the first entry as empty while currently happening tournaments are the first entry. 
+//        if (resBody.data.tournaments.nodes[0].events[0].standings.nodes.length != 0) {
+//            entrants = resBody.data.tournaments.nodes[0].events[0].standings.nodes;
+//        } else {
+//            entrants = resBody.data.tournaments.nodes[0].events[i].standings.nodes;
+        var formattedEntrants = "Total Entrants: " + resBody.data.tournaments.nodes[0].events[i].numEntrants + "\n";
+        i = 0;
         while (i < entrants.length) {
             formattedEntrants = formattedEntrants + entrants[i].entrant.seeds[0].placement + ". " + entrants[i].entrant.name + " (#" + entrants[i].entrant.seeds[0].seedNum + ")\n"
             i = i + 1;
@@ -172,7 +179,7 @@ function getTop8ByArgs(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-//            Authorization: `Bearer ${token.sggToken}`,
+            //            Authorization: `Bearer ${token.sggToken}`,
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
