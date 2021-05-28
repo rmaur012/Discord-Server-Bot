@@ -113,11 +113,16 @@ function getTop8(args, msgChannel) {
     }, function (error, response, body) {
         console.log("body: "+ body);
         var resBody = JSON.parse(body);
-        var entrants = resBody.data.tournaments.nodes[0].events[0].standings.nodes;
+        // For some reason, past tournaments have the first entry as empty while currently happening tournaments are the first entry. 
+        if (resBody.data.tournament.events[0].standings.nodes.length != 0) {
+            entrants = resBody.data.tournament.events[0].standings.nodes;
+        } else {
+            entrants = resBody.data.tournament.events[1].standings.nodes;
+        }
         var formattedEntrants = "";
         var i = 0;
         while (i < entrants.length) {
-            formattedEntrants = formattedEntrants + entrants[i].entrant.seeds[0].placement + ". " + entrants[i].entrant.name + " - Seed:" + entrants[i].entrant.seeds[0].seedNum + "\n"
+            formattedEntrants = formattedEntrants + entrants[i].entrant.seeds[0].placement + ". " + entrants[i].entrant.name + " (#" + entrants[i].entrant.seeds[0].seedNum + ")\n"
             i = i + 1;
         }
         if (body) {
