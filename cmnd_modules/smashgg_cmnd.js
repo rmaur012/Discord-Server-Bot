@@ -100,7 +100,7 @@ function getTop8(args, msgChannel) {
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
             //Accept: 'application/vnd.heroku+json; version=3',
-                        Authorization: `Bearer ${token.sggToken}`,
+              Authorization: `Bearer ${token.sggToken}`,
 //            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
@@ -119,7 +119,7 @@ function getTop8(args, msgChannel) {
         var i = 0;
         var found = false;
         while (i < resBody.data.tournaments.nodes[0].events.length) {
-            if (resBody.data.tournaments.nodes[0].events[i].name == "Smash Ultimate") {
+            if (resBody.data.tournaments.nodes[0].events[i].name.includes("Smash Ultimate") || resBody.data.tournaments.nodes[0].events[i].name.includes("Ultimate Singles")) {
                 found = true;
                 break;
             }
@@ -127,7 +127,7 @@ function getTop8(args, msgChannel) {
         }
 
         if (!found) {
-            gf.sendMessage("Could not find Smash Ultimate tournament.", msgChannel);
+            gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
             return;
         }
 
@@ -135,6 +135,7 @@ function getTop8(args, msgChannel) {
         var formattedEntrants = resBody.data.tournaments.nodes[0].name + " (" + resBody.data.tournaments.nodes[0].events[i].numEntrants + " Entrants)\n";
         i = 0;
         while (i < entrants.length) {
+            // Assuming seeds[] only has 1 bracket/no pools. Otherwise, it should be like top8WithArgs()
             formattedEntrants = formattedEntrants + entrants[i].entrant.seeds[0].placement + ". " + entrants[i].entrant.name + " (#" + entrants[i].entrant.seeds[0].seedNum + ")\n"
             i = i + 1;
         }
@@ -186,8 +187,8 @@ function getTop8ByArgs(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-            //            Authorization: `Bearer ${token.sggToken}`,
-            Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${token.sggToken}`,
+//            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -199,25 +200,29 @@ function getTop8ByArgs(args, msgChannel) {
         })
     }, function (error, response, body) {
         var resBody = JSON.parse(body);
-
+        var placementsOrder = [1,2,3,4,5,5,7,7];
         var i = 0;
-        while (resBody.data.tournament.events[i].names != "Smash Ultimate" && i < resBody.data.tournament.events.length) {
+        var found = false;
+        while ( i < resBody.data.tournament.events.length) {
+            if (resBody.data.tournament.events[i].name.includes("Smash Ultimate") || resBody.data.tournament.events[i].name.includes("Ultimate Singles")) {
+                found = true;
+                break;
+            }
             i = i + 1;
         }
-
-        var entrants = resBody.data.tournament.events[1].standings.nodes;
-
-        var entrants;
-        // For some reason, past tournaments have the first entry as empty while currently happening tournaments are the first entry. 
-        if (resBody.data.tournament.events[0].standings.nodes.length != 0) {
-            entrants = resBody.data.tournament.events[0].standings.nodes;
-        } else {
-            entrants = resBody.data.tournament.events[1].standings.nodes;
+        
+        if (!found) {
+            gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
+            return;
         }
-        var formattedEntrants = "";
+
+        var entrants = resBody.data.tournament.events[i].standings.nodes;
+        var formattedEntrants = resBody.data.tournament.name + " (" + resBody.data.tournament.events[i].numEntrants + " Entrants)\n";
         var i = 0;
+        var seedArrSize;
         while (i < entrants.length) {
-            formattedEntrants = formattedEntrants + entrants[i].entrant.seeds[0].placement + ". " + entrants[i].entrant.name + " - Seed:" + entrants[i].entrant.seeds[0].seedNum + "\n"
+            seedArrSize = entrants[i].entrant.seeds.length;
+            formattedEntrants = formattedEntrants + placementsOrder[i] + ". " + entrants[i].entrant.name + " (#" + entrants[i].entrant.seeds[seedArrSize-1].seedNum + ")\n"
             i = i + 1;
         }
         if (body) {
