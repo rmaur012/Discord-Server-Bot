@@ -2,8 +2,8 @@ const gf = require('../generalFunc.js');
 const request = require('request');
 const sggVariables = require('../cmnd_helpers/smashgg.json');
 
-//const token = process.env.SMASHGG_TOKEN;
-const token = require('../smashggToken.json');
+const token = process.env.SMASHGG_TOKEN;
+//const token = require('../smashggToken.json');
 
 var {
     graphql,
@@ -187,8 +187,8 @@ function getTop8ByArgs(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-                        Authorization: `Bearer ${token.sggToken}`,
-//            Authorization: `Bearer ${token}`,
+//                        Authorization: `Bearer ${token.sggToken}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
