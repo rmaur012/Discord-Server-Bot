@@ -113,11 +113,12 @@ function getTop8(args, msgChannel) {
     }, function (error, response, body) {
         console.log("body: "+ body);
         var resBody = JSON.parse(body);
+        var entrants;
         // For some reason, past tournaments have the first entry as empty while currently happening tournaments are the first entry. 
-        if (resBody.data.tournament.events[0].standings.nodes.length != 0) {
-            entrants = resBody.data.tournament.events[0].standings.nodes;
+        if (resBody.data.tournaments.nodes[0].events[0].standings.nodes.length != 0) {
+            entrants = resBody.data.tournaments.nodes[0].events[0].standings.nodes;
         } else {
-            entrants = resBody.data.tournament.events[1].standings.nodes;
+            entrants = resBody.data.tournaments.nodes[0].events[1].standings.nodes;
         }
         var formattedEntrants = "";
         var i = 0;
