@@ -8,7 +8,7 @@ function displayTourneyInfo(place, msgChannel) {
 module.exports = {
     act: function (args, msgChannel) {
         if (args.length == 0) {
-            gf.sendMessage('You didn\'t say which tournament.', msgChannel);
+            gf.sendMessage('You didn\'t specify which tournament.', msgChannel);
             return;
         }
 
@@ -59,7 +59,7 @@ module.exports = {
                 break;
             case 'ppg':
                 {
-                    displayTourneyInfo(tourneys., msgChannel);
+                    displayTourneyInfo(tourneys.ppg, msgChannel);
                 }
                 break;
             default:
