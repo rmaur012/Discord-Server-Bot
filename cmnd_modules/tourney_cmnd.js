@@ -57,6 +57,11 @@ module.exports = {
                     displayTourneyInfo(tourneys.flynns, msgChannel);
                 }
                 break;
+            case 'ppg':
+                {
+                    displayTourneyInfo(tourneys., msgChannel);
+                }
+                break;
             default:
                 gf.sendMessage('Could not find tournament info.', msgChannel);
         }
