@@ -100,8 +100,8 @@ function getTop8(args, msgChannel) {
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
             //Accept: 'application/vnd.heroku+json; version=3',
-              Authorization: `Bearer ${token.sggToken}`,
-//            Authorization: `Bearer ${token}`,
+//              Authorization: `Bearer ${token.sggToken}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
