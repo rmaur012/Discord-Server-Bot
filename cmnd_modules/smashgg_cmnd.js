@@ -100,7 +100,7 @@ function getTop8(args, msgChannel) {
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
             //Accept: 'application/vnd.heroku+json; version=3',
-//              Authorization: `Bearer ${token.sggToken}`,
+            //              Authorization: `Bearer ${token.sggToken}`,
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
@@ -187,7 +187,7 @@ function getTop8ByArgs(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-//                        Authorization: `Bearer ${token.sggToken}`,
+            //                        Authorization: `Bearer ${token.sggToken}`,
             Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
@@ -200,17 +200,17 @@ function getTop8ByArgs(args, msgChannel) {
         })
     }, function (error, response, body) {
         var resBody = JSON.parse(body);
-        var placementsOrder = [1,2,3,4,5,5,7,7];
+        var placementsOrder = [1, 2, 3, 4, 5, 5, 7, 7];
         var i = 0;
         var found = false;
-        while ( i < resBody.data.tournament.events.length) {
+        while (i < resBody.data.tournament.events.length) {
             if (resBody.data.tournament.events[i].name.includes("Smash Ultimate") || resBody.data.tournament.events[i].name.includes("Ultimate Singles")) {
                 found = true;
                 break;
             }
             i = i + 1;
         }
-        
+
         if (!found) {
             gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
             return;
@@ -222,7 +222,7 @@ function getTop8ByArgs(args, msgChannel) {
         var seedArrSize;
         while (i < entrants.length) {
             seedArrSize = entrants[i].entrant.seeds.length;
-            formattedEntrants = formattedEntrants + placementsOrder[i] + ". " + entrants[i].entrant.name + " (#" + entrants[i].entrant.seeds[seedArrSize-1].seedNum + ")\n"
+            formattedEntrants = formattedEntrants + placementsOrder[i] + ". " + entrants[i].entrant.name + " (#" + entrants[i].entrant.seeds[seedArrSize - 1].seedNum + ")\n"
             i = i + 1;
         }
         if (body) {
@@ -233,6 +233,169 @@ function getTop8ByArgs(args, msgChannel) {
             console.log(body)
         }
     });
+}
+
+function getPoolAndMatches(args, msgChannel) {
+
+    var tourneySlug = args[0];
+    var playerTag = "";
+    var foundPeriod = false;
+    for (var i = 1; i < args.length; i = i + 1) {
+        if (args[i] == '.') {
+            foundPeriod = true;
+        } else if (!foundPeriod) {
+            tourneySlug = tourneySlug + '-' + args[i].toLocaleLowerCase();
+        } else if (foundPeriod) {
+            playerTag = playerTag + " " + args[i].toLocaleLowerCase();
+        }
+    }
+
+    //This removes the space in the front. It will mess with the results.
+    playerTag = playerTag.slice(1);
+
+    if (!foundPeriod) {
+        gf.sendMessage('No player tag given. Did you separate the tournament and player with a period \'.\'?', msgChannel);
+        return;
+    }
+
+    var perPage = 100;
+
+    var query = `query GetPoolAndMatches($tourneySlug: String!, $playerTag: String!, $perPage: Int!) {
+  tournament(slug: $tourneySlug) {
+    id
+    name
+    state
+    events{
+        name
+        numEntrants
+      phases{
+        name
+        phaseGroups{
+          nodes{
+            displayIdentifier
+            seeds(query:{
+              filter: {
+                entrantName: $playerTag
+              }
+            }){
+              nodes{
+                players{
+                  gamerTag
+                }
+                phaseGroup{
+                  sets(perPage: $perPage,
+                    filters:{hideEmpty:true}) {
+                    nodes{
+                      round
+                      fullRoundText
+                      slots{
+                        entrant{
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}`;
+
+    request({
+        method: 'POST',
+        uri: `https://api.smash.gg/gql/alpha`,
+        headers: {
+//            Authorization: `Bearer ${token.sggToken}`,
+                        Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            query,
+            variables: {
+                tourneySlug,
+                playerTag,
+                perPage
+            },
+        })
+    }, function (error, response, body) {
+        var resBody = JSON.parse(body);
+        var i = 0;
+        var found = false;
+        while (i < resBody.data.tournament.events.length) {
+            if (resBody.data.tournament.events[i].name.includes("Smash Ultimate") || resBody.data.tournament.events[i].name.includes("Ultimate Singles")) {
+                found = true;
+                break;
+            }
+            i = i + 1;
+        }
+
+        if (!found) {
+            gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
+            return;
+        }
+
+        // Extract Gamertag, their pool, and the sets of that pool
+        var allPools = resBody.data.tournament.events[i].phases[0].phaseGroups.nodes;
+        var gamerTag = "",
+            poolIdentifier = "",
+            sets = [];
+        var focusedPool = 0;
+        while (focusedPool < allPools.length) {
+            //            console.log(allPools[focusedPool].displayIdentifier + " " +  allPools[focusedPool].seeds.nodes.length);
+            if (allPools[focusedPool].seeds.nodes.length != 0) {
+                gamerTag = allPools[focusedPool].seeds.nodes[0].players[0].gamerTag;
+                poolIdentifier = allPools[focusedPool].displayIdentifier;
+                sets = allPools[focusedPool].seeds.nodes[0].phaseGroup.sets.nodes;
+                break;
+            }
+            focusedPool = focusedPool + 1;
+        }
+
+        if (gamerTag == "" || poolIdentifier == "" || sets.length == 0) {
+            gf.sendMessage("Gamertag, Pool or Sets couldn't be found.", msgChannel);
+            return
+        }
+        
+        if(poolIdentifier == "1"){
+           poolIdentifier = "Main Bracket"
+           } else {
+           poolIdentifier = "Pool " + poolIdentifier;
+           }
+
+        var completeInfo = gamerTag + " -> " + poolIdentifier + "\n"
+
+        var focusedSet = 0;
+        while (focusedSet < sets.length) {
+            if (sets[focusedSet].slots[0].entrant == null) {
+                if (sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                    completeInfo = completeInfo + "Waiting for opponent in " + sets[focusedSet].fullRoundText;
+                }
+            } else if (sets[focusedSet].slots[1].entrant == null) {
+                if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
+                    completeInfo = completeInfo + "Waiting for opponent in " + sets[focusedSet].fullRoundText;
+                }
+            } else {
+                if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
+                    completeInfo = completeInfo + " Vs. " + sets[focusedSet].slots[1].entrant.name + " (" + sets[focusedSet].fullRoundText + ")\n";
+                } else if (sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                    completeInfo = completeInfo + " Vs. " + sets[focusedSet].slots[0].entrant.name + " (" + sets[focusedSet].fullRoundText + ")\n";
+                }
+            }
+            focusedSet = focusedSet + 1;
+        }
+        if (body) {
+            gf.sendMessage(completeInfo, msgChannel);
+        } else {
+            gf.sendMessage("No body found in reply.", msgChannel);
+            console.log('error: ' + response.statusCode)
+            console.log(body)
+        }
+    });
+
 }
 
 module.exports = {
@@ -261,6 +424,15 @@ module.exports = {
                 } else {
                     getTop8ByArgs(args, msgChannel);
                 }
+                break;
+
+            case 'pool':
+                if (args[0] == undefined) {
+                    gf.sendMessage('No tournament names given.', msgChannel);
+                    return;
+                }
+                getPoolAndMatches(args, msgChannel);
+
                 break;
 
             default:
