@@ -310,7 +310,7 @@ function getPoolAndMatches(args, msgChannel) {
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
 //            Authorization: `Bearer ${token.sggToken}`,
-                        Authorization: `Bearer ${token}`,
+                                    Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -359,34 +359,52 @@ function getPoolAndMatches(args, msgChannel) {
             gf.sendMessage("Gamertag, Pool or Sets couldn't be found.", msgChannel);
             return
         }
-        
-        if(poolIdentifier == "1"){
-           poolIdentifier = "Main Bracket"
-           } else {
-           poolIdentifier = "Pool " + poolIdentifier;
-           }
+
+        if (poolIdentifier == "1") {
+            poolIdentifier = "Main Bracket"
+        } else {
+            poolIdentifier = "Pool " + poolIdentifier;
+        }
 
         var completeInfo = gamerTag + " -> " + poolIdentifier + "\n"
 
         var focusedSet = 0;
+        var winnersMatches = [],
+            losersMatches = [];
         while (focusedSet < sets.length) {
-            if (sets[focusedSet].slots[0].entrant == null) {
-                if (sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-                    completeInfo = completeInfo + "Waiting for opponent in " + sets[focusedSet].fullRoundText;
+
+            if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag) || sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                if (sets[focusedSet].round > 0) {
+                    winnersMatches.push(sets[focusedSet]);
+                } else {
+                    losersMatches.push(sets[focusedSet]);
                 }
-            } else if (sets[focusedSet].slots[1].entrant == null) {
-                if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
-                    completeInfo = completeInfo + "Waiting for opponent in " + sets[focusedSet].fullRoundText;
+            }
+
+            focusedSet = focusedSet + 1;
+        }
+        var sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
+
+        focusedSet = 0;
+        while (focusedSet < sortedMatches.length) {
+            if (sortedMatches[focusedSet].slots[0].entrant == null) {
+                if (sortedMatches[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                    completeInfo = completeInfo + "Waiting for opponent in " + sortedMatches[focusedSet].fullRoundText;
+                }
+            } else if (sortedMatches[focusedSet].slots[1].entrant == null) {
+                if (sortedMatches[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
+                    completeInfo = completeInfo + "Waiting for opponent in " + sortedMatches[focusedSet].fullRoundText;
                 }
             } else {
-                if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
-                    completeInfo = completeInfo + " Vs. " + sets[focusedSet].slots[1].entrant.name + " (" + sets[focusedSet].fullRoundText + ")\n";
-                } else if (sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-                    completeInfo = completeInfo + " Vs. " + sets[focusedSet].slots[0].entrant.name + " (" + sets[focusedSet].fullRoundText + ")\n";
+                if (sortedMatches[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
+                    completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[1].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
+                } else if (sortedMatches[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                    completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[0].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
                 }
             }
             focusedSet = focusedSet + 1;
         }
+
         if (body) {
             gf.sendMessage(completeInfo, msgChannel);
         } else {
@@ -397,6 +415,73 @@ function getPoolAndMatches(args, msgChannel) {
     });
 
 }
+
+function sortPlayersSets(winners, losers) {
+    var i, j, temp, smallestRoundInd;
+    for (i = 0; i < winners.length - 1; i = i + 1) {
+        smallestRoundInd = i;
+        for (j = i + 1; j < winners.length; j = j + 1) {
+            if (winners[j].round < winners[smallestRoundInd].round) {
+                smallestRoundInd = j;
+            }
+        }
+        temp = winners[smallestRoundInd];
+        winners[smallestRoundInd] = winners[i];
+        winners[i] = temp;
+    }
+
+    //Check to see if player got to grand finals and grand finals reset. Take out those matches to put them in the end of the array.
+    var tempMatch, grandFinals, grandFinalsReset;
+    if (winners[winners.length - 1].fullRoundText == "Grand Final Reset" || winners[winners.length - 2].fullRoundText == "Grand Final Reset") {
+        tempMatch = winners.splice(winners.length - 1, 1);
+        if (tempMatch.fullRoundText == "Grand Final Reset") {
+            grandFinalsReset = tempMatch[0];
+            grandFinals = winners.splice(winners.length - 1, 1)[0];
+        } else {
+            grandFinals = tempMatch[0];
+            grandFinalsReset = winners.splice(winners.length - 1, 1)[0];
+        }
+    } else if (winners[winners.length - 1].fullRoundText == "Grand Final") {
+        grandFinals = winners.splice(winners.length - 1, 1)[0];
+    }
+
+    //Losers
+    for (i = 0; i < losers.length - 1; i = i + 1) {
+        smallestRoundInd = i;
+        for (j = i + 1; j < losers.length; j = j + 1) {
+            if (losers[j].round < losers[smallestRoundInd].round) {
+                smallestRoundInd = j;
+            }
+        }
+        temp = losers[smallestRoundInd];
+        losers[smallestRoundInd] = losers[i];
+        losers[i] = temp;
+    }
+
+    losers.reverse();
+
+    for (i = 0; i < losers.length; i = i + 1) {
+        winners.push(losers[i]);
+    }
+
+    //Adding grand finals and/or reset if it was found before
+    if (grandFinals != undefined) {
+        winners.push(grandFinals);
+        if (grandFinalsReset != undefined) {
+            winners.push(grandFinalsReset);
+        }
+    }
+
+    return winners;
+}
+
+//function displayRoundOrder(arr) {
+//    var string = "";
+//    for (var i = 0; i < arr.length; i = i + 1) {
+//        string = string + arr[i].round + ", ";
+//    }
+//    console.log(string);
+//}
 
 module.exports = {
     act: function (args, msgChannel) {
@@ -426,7 +511,7 @@ module.exports = {
                 }
                 break;
 
-            case 'pool':
+            case 'brk':
                 if (args[0] == undefined) {
                     gf.sendMessage('No tournament names given.', msgChannel);
                     return;
@@ -436,7 +521,7 @@ module.exports = {
                 break;
 
             default:
-                gf.sendMessage('Invalid subcommand for Smash.gg!', msgChannel);
+                gf.sendMessage('Invalid subcommand for Smash.gg! Either att, t8, or brk', msgChannel);
         }
 
     }
