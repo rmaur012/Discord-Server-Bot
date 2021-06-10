@@ -279,6 +279,7 @@ function getPoolAndMatches(args, msgChannel) {
               }
             }){
               nodes{
+                seedNum
                 players{
                   gamerTag
                 }
@@ -309,8 +310,8 @@ function getPoolAndMatches(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-//            Authorization: `Bearer ${token.sggToken}`,
-                                    Authorization: `Bearer ${token}`,
+            //            Authorization: `Bearer ${token.sggToken}`,
+            Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -342,12 +343,14 @@ function getPoolAndMatches(args, msgChannel) {
         var allPools = resBody.data.tournament.events[i].phases[0].phaseGroups.nodes;
         var gamerTag = "",
             poolIdentifier = "",
-            sets = [];
+            sets = [].
+            globalSeed = -1;
         var focusedPool = 0;
         while (focusedPool < allPools.length) {
             //            console.log(allPools[focusedPool].displayIdentifier + " " +  allPools[focusedPool].seeds.nodes.length);
-            if (allPools[focusedPool].seeds.nodes.length != 0) {
+            if (allPools[focusedPool].seeds.nodes.length != 0 && allPools[focusedPool].seeds.nodes[0].players[0].gamerTag.toLowerCase().includes(playerTag)) {
                 gamerTag = allPools[focusedPool].seeds.nodes[0].players[0].gamerTag;
+                globalSeed = allPools[focusedPool].seeds.nodes[0].seedNum;
                 poolIdentifier = allPools[focusedPool].displayIdentifier;
                 sets = allPools[focusedPool].seeds.nodes[0].phaseGroup.sets.nodes;
                 break;
@@ -366,7 +369,7 @@ function getPoolAndMatches(args, msgChannel) {
             poolIdentifier = "Pool " + poolIdentifier;
         }
 
-        var completeInfo = gamerTag + " -> " + poolIdentifier + "\n"
+        var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + ")\n"
 
         var focusedSet = 0;
         var winnersMatches = [],
