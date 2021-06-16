@@ -310,8 +310,8 @@ function getPoolAndMatches(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-            //            Authorization: `Bearer ${token.sggToken}`,
-            Authorization: `Bearer ${token}`,
+//            Authorization: `Bearer ${token.sggToken}`,
+                        Authorization: `Bearer ${token}`,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -324,6 +324,7 @@ function getPoolAndMatches(args, msgChannel) {
         })
     }, function (error, response, body) {
         var resBody = JSON.parse(body);
+        //console.log(resBody);
         var i = 0;
         var found = false;
         while (i < resBody.data.tournament.events.length) {
@@ -344,10 +345,10 @@ function getPoolAndMatches(args, msgChannel) {
         var gamerTag = "",
             poolIdentifier = "",
             sets = [].
-            globalSeed = -1;
+        globalSeed = -1;
         var focusedPool = 0;
         while (focusedPool < allPools.length) {
-            //            console.log(allPools[focusedPool].displayIdentifier + " " +  allPools[focusedPool].seeds.nodes.length);
+            console.log(allPools[focusedPool].displayIdentifier + " " + allPools[focusedPool].seeds.nodes.length);
             if (allPools[focusedPool].seeds.nodes.length != 0 && allPools[focusedPool].seeds.nodes[0].players[0].gamerTag.toLowerCase().includes(playerTag)) {
                 gamerTag = allPools[focusedPool].seeds.nodes[0].players[0].gamerTag;
                 globalSeed = allPools[focusedPool].seeds.nodes[0].seedNum;
@@ -376,14 +377,15 @@ function getPoolAndMatches(args, msgChannel) {
             losersMatches = [];
         while (focusedSet < sets.length) {
 
-            if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag) || sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-                if (sets[focusedSet].round > 0) {
-                    winnersMatches.push(sets[focusedSet]);
-                } else {
-                    losersMatches.push(sets[focusedSet]);
+            if (sets[focusedSet].slots[0].entrant != null && sets[focusedSet].slots[1].entrant != null) {
+                if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag) || sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                    if (sets[focusedSet].round > 0) {
+                        winnersMatches.push(sets[focusedSet]);
+                    } else {
+                        losersMatches.push(sets[focusedSet]);
+                    }
                 }
             }
-
             focusedSet = focusedSet + 1;
         }
         var sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
