@@ -39,6 +39,7 @@ var specialUrlEntries = {
     'jiggs': 'jigglypuff',
     'puff': 'jigglypuff',
     'joker': 'joker',
+    'kazuya': 'kazuya',
     'ken': 'ken',
     'ddd': 'king_dedede',
     'dedede': 'king_dedede',

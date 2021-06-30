@@ -57,6 +57,12 @@ module.exports = {
                     displayTourneyInfo(tourneys.flynns, msgChannel);
                 }
                 break;
+            case 'nxt':
+            case 'oven':
+                {
+                    displayTourneyInfo(tourneys.oven, msgChannel);
+                }
+                break;
             case 'ppg':
                 {
                     displayTourneyInfo(tourneys.ppg, msgChannel);

@@ -437,7 +437,7 @@ function sortPlayersSets(winners, losers) {
 
     //Check to see if player got to grand finals and grand finals reset. Take out those matches to put them in the end of the array.
     var tempMatch, grandFinals, grandFinalsReset;
-    if (winners[winners.length - 1].fullRoundText == "Grand Final Reset" || winners[winners.length - 2].fullRoundText == "Grand Final Reset") {
+    if (winners[winners.length - 1].fullRoundText == "Grand Final Reset" || (winners[winners.length - 2] != undefined && winners[winners.length - 2].fullRoundText == "Grand Final Reset")) {
         tempMatch = winners.splice(winners.length - 1, 1);
         if (tempMatch.fullRoundText == "Grand Final Reset") {
             grandFinalsReset = tempMatch[0];

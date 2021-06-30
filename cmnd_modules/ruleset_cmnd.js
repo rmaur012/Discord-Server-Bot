@@ -1,6 +1,6 @@
 const gf = require('../generalFunc.js');
 
-const sflRuleset = '_Starter Stages_\nBattlefield\nFinal Destination\nSmashville\nPS2\nTown & City\n\n_Counterpicks_\nKalos\nYoshi\'s Story\nLylat\n';
+const sflRuleset = '*Starter Stages*\nBattlefield\nFinal Destination\nSmashville\nPS2\nTown & City\n\n*Counterpicks*\nKalos\nYoshi\'s Story\nSmall Battlefield\n';
 
 module.exports = {
     act: function (args, msgChannel) {
@@ -12,19 +12,25 @@ module.exports = {
         var type = args[0];
         type = type.toLowerCase();
         switch (type) {
-            case 'ao':
-                {
-                    gf.sendMessage('3 Stocks, 7 Minutes.\n3 Bans, TSR\n' + sflRuleset, msgChannel);
-                }
-                break;
-            case 'vs':
+            case 'rex':
                 {
                     gf.sendMessage('3 Stocks, 7 Minutes.\n3 Bans, No DSR\n' + sflRuleset, msgChannel);
                 }
                 break;
-            case 'mcc':
+            case 'flynn':
+            case 'flynns':
                 {
-                    gf.sendMessage('3 Stocks, 7 Minutes.\n3 Bans, TSR\n' + sflRuleset, msgChannel);
+                    gf.sendMessage('3 Stocks, 7 Minutes.\n3 Bans, No DSR\n' + sflRuleset, msgChannel);
+                }
+                break;
+            case 'oven':
+                {
+                    gf.sendMessage('3 Stocks, 7 Minutes.\n3 Bans, No DSR\n' + sflRuleset, msgChannel);
+                }
+                break;
+            case 'ppg':
+                {
+                    gf.sendMessage('3 Stocks, 7 Minutes.\n3 Bans, No DSR\n' + sflRuleset, msgChannel);
                 }
                 break;
             default:

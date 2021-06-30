@@ -31,8 +31,12 @@
         "bracket": "https://challonge.com/users/flynnsgamingfl/tournaments",
         "stream": "https://www.twitch.tv/flynnsgamingfl"
     },
+    "oven": {
+        "bracket": "https://smash.gg/oven",
+        "stream": "https://www.twitch.tv/ovenm1t"
+    },
     "ppg": {
-        "bracket": "https://challonge.com/communities/oven",
-        "stream": "https://www.twitch.tv/0venmit"
+        "bracket": "https://challonge.com/communities/PPG-ssbu/tournaments",
+        "stream": "https://www.twitch.tv/gabel_idk"
     }
 }

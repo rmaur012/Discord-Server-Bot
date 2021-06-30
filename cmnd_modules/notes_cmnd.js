@@ -6,6 +6,7 @@ const {
     google
 } = require('googleapis');
 var x_axis = {
+    'aegis': 'CB',
     'banjo': 'BV',
     'bayo': 'BL',
     'bayonetta': 'BL',
@@ -47,6 +48,7 @@ var x_axis = {
     'jiggs': 'L',
     'puff': 'L',
     'joker': 'BT',
+    'kazuya': 'CC',
     'ken': 'BI',
     'ddd': 'AM',
     'dedede': 'AM',
@@ -73,7 +75,7 @@ var x_axis = {
     'mm': 'BY',
     'gnw': 'AB',
     'game': 'AB',
-    'mythra': 'CC',
+    'mythra': 'CB',
     'ness': 'J',
     'olimar': 'AN',
     'pac': 'BC',
@@ -129,6 +131,7 @@ var x_axis = {
     'zero': 'AE'
 };
 var y_axis = {
+    'aegis': '80',
     'banjo': '74',
     'bayo': '64',
     'bayonetta': '64',
@@ -170,6 +173,7 @@ var y_axis = {
     'jiggs': '12',
     'puff': '12',
     'joker': '72',
+    'kazuya': '81',
     'ken': '61',
     'ddd': '39',
     'dedede': '39',
@@ -195,7 +199,7 @@ var y_axis = {
     'mm': '77',
     'gnw': '28',
     'game': '28',
-    'mythra': '81',
+    'mythra': '80',
     'ness': '10',
     'olimar': '40',
     'pac': '55',
