@@ -1,6 +1,6 @@
 var gf = require('../generalFunc.js');
 
-var intro = "Hello, I am TopTierBOT and I co-main Lucina and Pikachu. :)";
+var intro = "I am Sakurai from Sora Limited™.";
 
 module.exports ={
     act: function (messageChannel) {

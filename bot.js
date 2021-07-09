@@ -55,21 +55,24 @@ bot.on("message", (message) => {
                 cmnds.roll.act(args, msgChannel);
                 break;
 
-            case 'kh':
-                cmnds.kh.act(args, msgChannel);
-                break;
+                // kh command is retired
+//            case 'kh':
+//                cmnds.kh.act(args, msgChannel);
+//                break;
 
-            case 'mv':
-                cmnds.mv.act(msgChannel);
-                break;
+                // mv command is retired
+//            case 'mv':
+//                cmnds.mv.act(msgChannel);
+//                break;
 
             case 'help':
                 cmnds.help.act(args, msgChannel);
                 break;
 
-            case 'yt':
-                cmnds.yt.act(args, msgChannel);
-                break;
+                //yt command is retired
+//            case 'yt':
+//                cmnds.yt.act(args, msgChannel);
+//                break;
 
             case 'poll':
                 cmnds.poll.act(args, message);
@@ -79,22 +82,23 @@ bot.on("message", (message) => {
                 gf.sendMessage("We got: " + message.guild.name, msgChannel);
                 break;
 
+                // Music commands are retired
                 //Music commands---------------------
-            case 'play':
-                cmnds.music.play(args, message);
-                break;
-
-            case 'queue':
-                cmnds.music.queue(message);
-                break;
-
-            case 'skip':
-                cmnds.music.skip(message);
-                break;
-
-            case 'stop':
-                cmnds.music.stop(message);
-                break;
+//            case 'play':
+//                cmnds.music.play(args, message);
+//                break;
+//
+//            case 'queue':
+//                cmnds.music.queue(message);
+//                break;
+//
+//            case 'skip':
+//                cmnds.music.skip(message);
+//                break;
+//
+//            case 'stop':
+//                cmnds.music.stop(message);
+//                break;
                 //======================================
 
             case 'roulette':

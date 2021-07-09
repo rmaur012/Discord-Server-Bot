@@ -1,6 +1,6 @@
 var gf = require('../generalFunc.js');
 
-var cmndsString = 'hi, quote, tourney, r, poll, kh, mv, yt, roulette, shoot, frame, lvr, stages, dict, ruleset, pr, tw, sgg, and notes.';
+var cmndsString = 'hi, quote, tourney, r, poll, roulette, shoot, frame, lvr, stages, dict, ruleset, pr, tw, sgg, and notes.';
 
 //var commands = [["!hi", "Say hi to TopTierBot"],
 //                ["!quote", "Make TTB say a quote from someone"],
@@ -31,7 +31,7 @@ module.exports = {
         switch (args[0]) {
 
             case 'hi':
-                gf.sendMessage('The `!hi` command just makes TopTierBot say Hi! A good way to check if the bot is active.', msgChannel);
+                gf.sendMessage('The `!hi` command just makes TopTierBOT say Hi! A good way to check if the bot is active.', msgChannel);
                 return;
 
             case 'quote':
@@ -39,7 +39,7 @@ module.exports = {
                 return;
 
             case 'tourney':
-                gf.sendMessage('`!tourney (ao | vs | ecg | mcc)` - Get bracket and stream links for specified tournament. Example `!tournament mcc`', msgChannel);
+                gf.sendMessage('`!tourney (rex | flynns | oven | ppg)` - Get bracket and stream links for specified tournament. Example `!tournament rex`', msgChannel);
                 return;
 
             case 'r':
@@ -50,42 +50,45 @@ module.exports = {
                 gf.sendMessage('The `!kh` command gets the link to the Kurogane Hammer website.', msgChannel);
                 return;
 
-            case 'mv':
-                gf.sendMessage('The `!mv` command gets the link to Struz Smash Move Viewer.', msgChannel);
-                return;
+                // Retired command
+                //            case 'mv':
+                //                gf.sendMessage('The `!mv` command gets the link to Struz Smash Move Viewer.', msgChannel);
+                //                return;
 
             case 'help':
                 gf.sendMessage('`!help (command)` - Explains what each command is and how to write it. Specify a command to learn about that command or no command to see the list of available commands.', msgChannel);
                 return;
 
-            case 'yt':
-                gf.sendMessage('`!yt (bsd | msc | jpl)` - Gives you a link to Beefy Smash Doods, My Smash Corner, and Joe\'s playlist, respectively.', msgChannel);
-                return;
+                // Retired command
+                //            case 'yt':
+                //                gf.sendMessage('`!yt (bsd | msc | jpl)` - Gives you a link to Beefy Smash Doods, My Smash Corner, and Joe\'s playlist, respectively.', msgChannel);
+                //                return;
 
             case 'poll':
                 gf.sendMessage('`!poll (Write a yes or on question here)` - A simple poll question will be stated with a thumbs up and down reaction for people to select.', msgChannel);
                 return;
 
-                //Music commands---------------------
-//            case 'play':
-//                cmnds.music.play(args, message);
-//                return;
-//
-//            case 'queue':
-//                cmnds.music.queue(message);
-//                return;
-//
-//            case 'skip':
-//                cmnds.music.skip(message);
-//                return;
-//
-//            case 'stop':
-//                cmnds.music.stop(message);
-//                return;
+                //Music commands (retired)---------------------
+                //            case 'play':
+                //                cmnds.music.play(args, message);
+                //                return;
+                //
+                //            case 'queue':
+                //                cmnds.music.queue(message);
+                //                return;
+                //
+                //            case 'skip':
+                //                cmnds.music.skip(message);
+                //                return;
+                //
+                //            case 'stop':
+                //                cmnds.music.stop(message);
+                //                return;
                 //======================================
 
             case 'roulette':
                 gf.sendMessage('The `!roulette` command starts a round of russian roulette! After this, someone enters `!shoot` to pull the trigger. This can only be done in the `#roulette` channel.', msgChannel);
+                return;
 
             case 'shoot':
                 gf.sendMessage('The `!shoot` command pulls the trigger of a russian roulette session. Must call `!roulette` before this command. This can only be done in the `#roulette` channel.', msgChannel);
@@ -112,31 +115,31 @@ module.exports = {
                 return;
 
             case 'notes':
-               gf.sendMessage('`!notes (w | wg) char1 (char2) (notes to write)` - `!notes char` for general notes of that char. `!notes char1 char2` for matchup notes of you playing char1 fighting char2. `!notes wg char` to write to the general notes for that character. `!notes w char1 char2 Add this to notes...` to add all after the character names to the matchup notes.', msgChannel);
+                gf.sendMessage('`!notes (w | wg) char1 (char2) (notes to write)` - `!notes char` for general notes of that char. `!notes char1 char2` for matchup notes of you playing char1 fighting char2. `!notes wg char` to write to the general notes for that character. `!notes w char1 char2 Add this to notes...` to add all after the character names to the matchup notes.', msgChannel);
                 return;
 
             case 'pr':
                 gf.sendMessage('The `!pr` command gives you the list of SFL PR members for the last season.', msgChannel);
                 return;
-                
+
             case 'tw':
                 gf.sendMessage('`!tw (channel1) (channel2) (channel3) (channel4)` - Gives you link to twitch channels you specify. Putting 1 channel will take you to that twitch channel. Entering 2-4 channels will give you the multitwitch link.', msgChannel);
                 return;
-                
+
             case 'sgg':
                 gf.sendMessage('`!sgg [att|t8] (tourney name)` - `att` gives you the number of attendants to a specified tournament, which is required. `t8` gives the top 8 and their seed for a specified tournament. If `t8` isn\'t given a tournament, it will assume you want the latest Rex Baron results.', msgChannel);
                 return;
 
             default:
                 gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
+                return;
                 // Just add any case commands if you want to..
         }
 
-
-        var helpStr = "___Command Help Guide___\n";
-        for (var i = 0; i < commands.length; i++) {
-            helpStr += "**" + commands[i][0] + "** - " + commands[i][1] + "\n";
-        }
-        gf.sendMessage(helpStr, msgChannel);
+        //        var helpStr = "___Command Help Guide___\n" + cmndsString;
+        //        for (var i = 0; i < commands.length; i++) {
+        //            helpStr += "**" + commands[i][0] + "** - " + commands[i][1] + "\n";
+        //        }
+        //        gf.sendMessage(helpStr, msgChannel);
     }
 };
