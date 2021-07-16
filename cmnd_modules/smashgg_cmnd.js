@@ -10,6 +10,9 @@ var {
     buildSchema
 } = require('graphql');
 
+var authToken = `Bearer ${token}`;
+//var authToken = `Bearer ${token.sggToken}`;
+
 function getTotalAttendees(args, msgChannel) {
 
     var tourneySlug = args[0];
@@ -33,8 +36,7 @@ function getTotalAttendees(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-            //            Authorization: `Bearer ${token.sggToken}`,
-            Authorization: `Bearer ${token}`,
+            Authorization: authToken,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -100,8 +102,7 @@ function getTop8(args, msgChannel) {
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
             //Accept: 'application/vnd.heroku+json; version=3',
-            //              Authorization: `Bearer ${token.sggToken}`,
-            Authorization: `Bearer ${token}`,
+            Authorization: authToken,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -187,8 +188,7 @@ function getTop8ByArgs(args, msgChannel) {
         method: 'POST',
         uri: `https://api.smash.gg/gql/alpha`,
         headers: {
-            //                        Authorization: `Bearer ${token.sggToken}`,
-            Authorization: `Bearer ${token}`,
+            Authorization: authToken,
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
@@ -260,7 +260,54 @@ function getPoolAndMatches(args, msgChannel) {
 
     var perPage = 100;
 
-    var query = `query GetPoolAndMatches($tourneySlug: String!, $playerTag: String!, $perPage: Int!) {
+    var query = `query GetPlayerId($tourneySlug: String!, $playerTag: String!) {
+  tournament(slug: $tourneySlug) {
+    participants(query: {
+     filter:{
+      gamerTag: $playerTag
+    }
+    }){
+      nodes{
+        entrants{
+          id
+        }
+      }
+    }
+  }
+}`;
+
+
+    request({
+        method: 'POST',
+        uri: `https://api.smash.gg/gql/alpha`,
+        headers: {
+            Authorization: authToken,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            query,
+            variables: {
+                tourneySlug,
+                playerTag
+            },
+        })
+    }, function (error, response, body) {
+        var resBody = JSON.parse(body);
+//        console.log(resBody);
+
+        if (resBody.errors != undefined && resBody.errors.length > 0) {
+            gf.sendMessage("Error Found: " + resBody.errors[0].message, msgChannel);
+            return;
+        }
+
+        if (resBody.data.tournament.participants.nodes.length == 0) {
+            gf.sendMessage("Player Id could not be found to then find in tournament.", msgChannel);
+            return;
+        }
+
+        var playerId = resBody.data.tournament.participants.nodes[0].entrants[0].id;
+
+        var query = `query GetPoolAndMatches($tourneySlug: String!, $playerTag: String!, $perPage: Int!, $playerId: ID!) {
   tournament(slug: $tourneySlug) {
     id
     name
@@ -289,7 +336,7 @@ function getPoolAndMatches(args, msgChannel) {
                 }
                 phaseGroup{
                   sets(perPage: $perPage,
-                    filters:{hideEmpty:true}) {
+                    filters:{hideEmpty:true, entrantIds:[$playerId]}) {
                     nodes{
                       round
                       fullRoundText
@@ -310,117 +357,128 @@ function getPoolAndMatches(args, msgChannel) {
   }
 }`;
 
-    request({
-        method: 'POST',
-        uri: `https://api.smash.gg/gql/alpha`,
-        headers: {
-//                        Authorization: `Bearer ${token.sggToken}`,
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            query,
-            variables: {
-                tourneySlug,
-                playerTag,
-                perPage
+        request({
+            method: 'POST',
+            uri: `https://api.smash.gg/gql/alpha`,
+            headers: {
+                Authorization: authToken,
+                'Content-Type': 'application/json'
             },
-        })
-    }, function (error, response, body) {
-        var resBody = JSON.parse(body);
-        //console.log(resBody);
-        var i = 0;
-        var found = false;
-        while (i < resBody.data.tournament.events.length) {
-            if (resBody.data.tournament.events[i].videogame.id == 1386 && resBody.data.tournament.events[i].type == 1) {
-                found = true;
-                break;
-            }
-            i = i + 1;
-        }
-
-        if (!found) {
-            gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
+            body: JSON.stringify({
+                query,
+                variables: {
+                    tourneySlug,
+                    playerTag,
+                    perPage,
+                    playerId
+                },
+            })
+        }, function (error, response, body) {
+            var resBody = JSON.parse(body);
+//            console.log(resBody);
+            
+            if (resBody.errors != undefined && resBody.errors.length > 0) {
+            gf.sendMessage("Error Found: " + resBody.errors[0].message, msgChannel);
             return;
         }
-
-        // Extract Gamertag, their pool, and the sets of that pool
-        var allPools = resBody.data.tournament.events[i].phases[0].phaseGroups.nodes;
-        var gamerTag = "",
-            poolIdentifier = "",
-            sets = [].
-        globalSeed = -1;
-        var focusedPool = 0;
-        while (focusedPool < allPools.length) {
-//            console.log(allPools[focusedPool].displayIdentifier + " " + allPools[focusedPool].seeds.nodes.length);
-            if (allPools[focusedPool].seeds.nodes.length != 0 && allPools[focusedPool].seeds.nodes[0].players[0].gamerTag.toLowerCase().includes(playerTag)) {
-                gamerTag = allPools[focusedPool].seeds.nodes[0].players[0].gamerTag;
-                globalSeed = allPools[focusedPool].seeds.nodes[0].seedNum;
-                poolIdentifier = allPools[focusedPool].displayIdentifier;
-                sets = allPools[focusedPool].seeds.nodes[0].phaseGroup.sets.nodes;
-                break;
+            
+            var i = 0;
+            var found = false;
+            while (i < resBody.data.tournament.events.length) {
+                if (resBody.data.tournament.events[i].videogame.id == 1386 && resBody.data.tournament.events[i].type == 1) {
+                    found = true;
+                    break;
+                }
+                i = i + 1;
             }
-            focusedPool = focusedPool + 1;
-        }
 
-        if (gamerTag == "" || poolIdentifier == "" || sets.length == 0) {
-            gf.sendMessage("Gamertag, Pool or Sets couldn't be found.", msgChannel);
-            return
-        }
+            if (!found) {
+                gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
+                return;
+            }
 
-        if (poolIdentifier == "1") {
-            poolIdentifier = "Main Bracket"
-        } else {
-            poolIdentifier = "Pool " + poolIdentifier;
-        }
+            var totalEventEntrants = resBody.data.tournament.events[i].numEntrants;
 
-        var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + ")\n"
+            // Extract Gamertag, their pool, and the sets of that pool
+            var allPools = resBody.data.tournament.events[i].phases[0].phaseGroups.nodes;
+            var gamerTag = "",
+                poolIdentifier = "",
+                sets = [].
+            globalSeed = -1;
+            var focusedPool = 0;
+            while (focusedPool < allPools.length) {
+                //            console.log(allPools[focusedPool].displayIdentifier + " " + allPools[focusedPool].seeds.nodes.length);
+                if (allPools[focusedPool].seeds.nodes.length != 0 && allPools[focusedPool].seeds.nodes[0].players[0].gamerTag.toLowerCase().includes(playerTag)) {
+                    gamerTag = allPools[focusedPool].seeds.nodes[0].players[0].gamerTag;
+                    globalSeed = allPools[focusedPool].seeds.nodes[0].seedNum;
+                    poolIdentifier = allPools[focusedPool].displayIdentifier;
+                    sets = allPools[focusedPool].seeds.nodes[0].phaseGroup.sets.nodes;
+                    break;
+                }
+                focusedPool = focusedPool + 1;
+            }
 
-        var focusedSet = 0;
-        var winnersMatches = [],
-            losersMatches = [];
-        while (focusedSet < sets.length) {
+            if (gamerTag == "" || poolIdentifier == "" || sets.length == 0) {
+                gf.sendMessage("Gamertag, Pool or Sets couldn't be found.", msgChannel);
+                return
+            }
 
-            if (sets[focusedSet].slots[0].entrant != null && sets[focusedSet].slots[1].entrant != null) {
-                if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag) || sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-                    if (sets[focusedSet].round > 0) {
-                        winnersMatches.push(sets[focusedSet]);
-                    } else {
-                        losersMatches.push(sets[focusedSet]);
+            if (poolIdentifier == "1") {
+                poolIdentifier = "Main Bracket"
+            } else {
+                poolIdentifier = "Pool " + poolIdentifier;
+            }
+
+            var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
+
+            var focusedSet = 0;
+            var winnersMatches = [],
+                losersMatches = [];
+            while (focusedSet < sets.length) {
+
+                if (sets[focusedSet].slots[0].entrant != null && sets[focusedSet].slots[1].entrant != null) {
+                    if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag) || sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                        if (sets[focusedSet].round > 0) {
+                            winnersMatches.push(sets[focusedSet]);
+                        } else {
+                            losersMatches.push(sets[focusedSet]);
+                        }
                     }
                 }
+                focusedSet = focusedSet + 1;
             }
-            focusedSet = focusedSet + 1;
-        }
-        var sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
+            var sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
 
-        focusedSet = 0;
-        while (focusedSet < sortedMatches.length) {
-            if (sortedMatches[focusedSet].slots[0].entrant == null) {
-                if (sortedMatches[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-                    completeInfo = completeInfo + "Waiting for opponent in " + sortedMatches[focusedSet].fullRoundText;
+            focusedSet = 0;
+            while (focusedSet < sortedMatches.length) {
+                if (sortedMatches[focusedSet].slots[0].entrant == null) {
+                    if (sortedMatches[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                        completeInfo = completeInfo + "Waiting for opponent in " + sortedMatches[focusedSet].fullRoundText;
+                    }
+                } else if (sortedMatches[focusedSet].slots[1].entrant == null) {
+                    if (sortedMatches[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
+                        completeInfo = completeInfo + "Waiting for opponent in " + sortedMatches[focusedSet].fullRoundText;
+                    }
+                } else {
+                    if (sortedMatches[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
+                        completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[1].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
+                    } else if (sortedMatches[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                        completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[0].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
+                    }
                 }
-            } else if (sortedMatches[focusedSet].slots[1].entrant == null) {
-                if (sortedMatches[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
-                    completeInfo = completeInfo + "Waiting for opponent in " + sortedMatches[focusedSet].fullRoundText;
-                }
+                focusedSet = focusedSet + 1;
+            }
+
+            if (body) {
+                gf.sendMessage(completeInfo, msgChannel);
             } else {
-                if (sortedMatches[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
-                    completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[1].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
-                } else if (sortedMatches[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-                    completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[0].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
-                }
+                gf.sendMessage("No body found in reply.", msgChannel);
+                console.log('error: ' + response.statusCode)
+                console.log(body)
             }
-            focusedSet = focusedSet + 1;
-        }
+        });
 
-        if (body) {
-            gf.sendMessage(completeInfo, msgChannel);
-        } else {
-            gf.sendMessage("No body found in reply.", msgChannel);
-            console.log('error: ' + response.statusCode)
-            console.log(body)
-        }
+
     });
 
 }
