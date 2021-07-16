@@ -268,6 +268,7 @@ function getPoolAndMatches(args, msgChannel) {
     events{
         name
         numEntrants
+        type
         videogame {
       	  id
       	}
@@ -331,7 +332,7 @@ function getPoolAndMatches(args, msgChannel) {
         var i = 0;
         var found = false;
         while (i < resBody.data.tournament.events.length) {
-            if (resBody.data.tournament.events[i].videogame.id == 1386 &&(resBody.data.tournament.events[i].name.includes("Ultimate") || resBody.data.tournament.events[i].name.includes("Singles"))) {
+            if (resBody.data.tournament.events[i].videogame.id == 1386 && resBody.data.tournament.events[i].type == 1) {
                 found = true;
                 break;
             }
