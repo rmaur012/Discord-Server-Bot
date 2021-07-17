@@ -58,9 +58,8 @@ module.exports = {
                 }
                 break;
             case 'nxt':
-            case 'oven':
                 {
-                    displayTourneyInfo(tourneys.oven, msgChannel);
+                    displayTourneyInfo(tourneys.nxt, msgChannel);
                 }
                 break;
             case 'ppg':

@@ -1,6 +1,6 @@
 {
   "name": "TopTierBOT",
-  "version": "1.1.0",
+  "version": "1.10.0",
   "description": "Dicord Bot for fun and friends.",
   "main": "bot.js",
   "scripts": {
