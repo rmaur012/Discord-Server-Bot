@@ -330,6 +330,7 @@ function getPoolAndMatches(args, msgChannel) {
               }
             }){
               nodes{
+                placement
                 seedNum
                 players{
                   gamerTag
@@ -402,6 +403,7 @@ function getPoolAndMatches(args, msgChannel) {
             // Extract Gamertag, their pool, and the sets of that pool
             var allPools = resBody.data.tournament.events[i].phases[0].phaseGroups.nodes;
             var gamerTag = "",
+                placement = -1,
                 poolIdentifier = "",
                 sets = [].
             globalSeed = -1;
@@ -411,6 +413,7 @@ function getPoolAndMatches(args, msgChannel) {
                 if (allPools[focusedPool].seeds.nodes.length != 0 && allPools[focusedPool].seeds.nodes[0].players[0].gamerTag.toLowerCase().includes(playerTag)) {
                     gamerTag = allPools[focusedPool].seeds.nodes[0].players[0].gamerTag;
                     globalSeed = allPools[focusedPool].seeds.nodes[0].seedNum;
+                    placement = allPools[focusedPool].seeds.nodes[0].placement;
                     poolIdentifier = allPools[focusedPool].displayIdentifier;
                     sets = allPools[focusedPool].seeds.nodes[0].phaseGroup.sets.nodes;
                     break;
@@ -468,6 +471,8 @@ function getPoolAndMatches(args, msgChannel) {
                 }
                 focusedSet = focusedSet + 1;
             }
+            
+            completeInfo = completeInfo + "Placement: " + placement;
 
             if (body) {
                 gf.sendMessage(completeInfo, msgChannel);
