@@ -2,16 +2,16 @@ const gf = require('../generalFunc.js');
 const request = require('request');
 const sggVariables = require('../cmnd_helpers/smashgg.json');
 
-//const token = process.env.SMASHGG_TOKEN;
-const token = require('../smashggToken.json');
+const token = process.env.SMASHGG_TOKEN;
+//const token = require('../smashggToken.json');
 
 var {
     graphql,
     buildSchema
 } = require('graphql');
 
-//var authToken = `Bearer ${token}`;
-var authToken = `Bearer ${token.sggToken}`;
+var authToken = `Bearer ${token}`;
+//var authToken = `Bearer ${token.sggToken}`;
 
 function getTotalAttendees(args, msgChannel) {
 
