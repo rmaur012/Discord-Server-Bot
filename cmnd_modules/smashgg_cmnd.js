@@ -3,22 +3,27 @@ const request = require('request');
 const sggVariables = require('../cmnd_helpers/smashgg.json');
 
 const token = process.env.SMASHGG_TOKEN;
+var authToken = `Bearer ${token}`;
 //const token = require('../smashggToken.json');
+//var authToken = `Bearer ${token.sggToken}`;
 
 var {
     graphql,
     buildSchema
 } = require('graphql');
 
-var authToken = `Bearer ${token}`;
-//var authToken = `Bearer ${token.sggToken}`;
-
 function getTotalAttendees(args, msgChannel) {
+    var tourneySlug = "";
 
-    var tourneySlug = args[0];
-    for (var i = 1; i < args.length; i = i + 1) {
-        tourneySlug = tourneySlug + '-' + args[i];
+    if (args[0] == undefined) {
+        tourneySlug = process.env.TOURNEY_SLUG;
+    } else {
+        tourneySlug = args[0];
+        for (var i = 1; i < args.length; i = i + 1) {
+            tourneySlug = tourneySlug + '-' + args[i];
+        }
     }
+    
     var query = `query AttendeeCount($tourneySlug: String!) {
   tournament(slug: $tourneySlug) {
     id
@@ -47,6 +52,7 @@ function getTotalAttendees(args, msgChannel) {
         })
     }, function (error, response, body) {
         var resBody = JSON.parse(body);
+//        console.log(resBody);
         var tname = resBody.data.tournament.participants.pageInfo.total;
         if (body) {
             gf.sendMessage(tname, msgChannel);
@@ -237,7 +243,7 @@ function getPoolAndMatches(args, msgChannel) {
     var playerTag = args[0];
     for (var i = 1; i < args.length; i = i + 1) {
         playerTag = playerTag + " " + args[i].toLocaleLowerCase();
-        
+
     }
 
     var perPage = 100;
@@ -275,7 +281,7 @@ function getPoolAndMatches(args, msgChannel) {
         })
     }, function (error, response, body) {
         var resBody = JSON.parse(body);
-//        console.log(resBody);
+        //        console.log(resBody);
 
         if (resBody.errors != undefined && resBody.errors.length > 0) {
             gf.sendMessage("Error Found: " + resBody.errors[0].message, msgChannel);
@@ -358,13 +364,13 @@ function getPoolAndMatches(args, msgChannel) {
             })
         }, function (error, response, body) {
             var resBody = JSON.parse(body);
-//            console.log(resBody);
-            
+            //            console.log(resBody);
+
             if (resBody.errors != undefined && resBody.errors.length > 0) {
-            gf.sendMessage("Error Found: " + resBody.errors[0].message, msgChannel);
-            return;
-        }
-            
+                gf.sendMessage("Error Found: " + resBody.errors[0].message, msgChannel);
+                return;
+            }
+
             var i = 0;
             var found = false;
             while (i < resBody.data.tournament.events.length) {
@@ -453,7 +459,7 @@ function getPoolAndMatches(args, msgChannel) {
                 }
                 focusedSet = focusedSet + 1;
             }
-            
+
             completeInfo = completeInfo + "Placement: " + placement;
 
             if (body) {
@@ -470,8 +476,8 @@ function getPoolAndMatches(args, msgChannel) {
 
 }
 
-function setTournamentSlug(args, msgChannel){
-    
+function setTournamentSlug(args, msgChannel) {
+
 
     var tourneySlug = args[0];
     for (var i = 1; i < args.length; i = i + 1) {
@@ -499,35 +505,35 @@ function setTournamentSlug(args, msgChannel){
             },
         })
     }, function (error, response, body) {
-//        console.log("body: "+ body);
+        //        console.log("body: "+ body);
         var resBody = JSON.parse(body);
-        
-        if(resBody.data.tournament == null){
-           gf.sendMessage("Could not find the tournament. Is the tournament found in Smash.gg?", msgChannel);
+
+        if (resBody.data.tournament == null) {
+            gf.sendMessage("Could not find the tournament. Is the tournament found in Smash.gg?", msgChannel);
             return;
         }
-        
+
         request({
-                method: 'PATCH',
-                uri: `https://api.heroku.com/apps/${process.env.APP_NAME}/config-vars`,
-                //                uri: `https://api.heroku.com/apps/${process.env.BOT_TOKEN}/config-vars`,
-                headers: {
-                    Accept: 'application/vnd.heroku+json; version=3',
-                    Authorization: `Bearer ${process.env.HEROKU_BEARER}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    TOURNEY_SLUG: tourneySlug
-                })
-            }, function (error, response, body) {
-                if (response.statusCode == 200) {
-                    gf.sendMessage("Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
-                } else {
-                    gf.sendMessage("Tournament Slug could not be stored! Try again.", msgChannel);
-                    console.log('error: ' + response.statusCode)
-                    console.log(body)
-                }
-            });
+            method: 'PATCH',
+            uri: `https://api.heroku.com/apps/${process.env.APP_NAME}/config-vars`,
+            //                uri: `https://api.heroku.com/apps/${process.env.BOT_TOKEN}/config-vars`,
+            headers: {
+                Accept: 'application/vnd.heroku+json; version=3',
+                Authorization: `Bearer ${process.env.HEROKU_BEARER}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                TOURNEY_SLUG: tourneySlug
+            })
+        }, function (error, response, body) {
+            if (response.statusCode == 200) {
+                gf.sendMessage("Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
+            } else {
+                gf.sendMessage("Tournament Slug could not be stored! Try again.", msgChannel);
+                console.log('error: ' + response.statusCode)
+                console.log(body)
+            }
+        });
     });
 }
 
@@ -611,10 +617,6 @@ module.exports = {
 
         switch (subCmd) {
             case 'att':
-                if (args[0] == undefined) {
-                    gf.sendMessage('No tournament names given.', msgChannel);
-                    return;
-                }
                 getTotalAttendees(args, msgChannel);
                 break;
 
@@ -625,13 +627,13 @@ module.exports = {
                     getTop8ByArgs(args, msgChannel);
                 }
                 break;
-                
+
             case 'set':
                 if (args[0] == undefined) {
                     gf.sendMessage('No tournament names given.', msgChannel);
                     return;
                 }
-                
+
                 setTournamentSlug(args, msgChannel);
                 break;
 
