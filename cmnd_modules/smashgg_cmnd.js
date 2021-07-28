@@ -2,16 +2,16 @@ const gf = require('../generalFunc.js');
 const request = require('request');
 const sggVariables = require('../cmnd_helpers/smashgg.json');
 
-const token = process.env.SMASHGG_TOKEN;
-//const token = require('../smashggToken.json');
+//const token = process.env.SMASHGG_TOKEN;
+const token = require('../smashggToken.json');
 
 var {
     graphql,
     buildSchema
 } = require('graphql');
 
-var authToken = `Bearer ${token}`;
-//var authToken = `Bearer ${token.sggToken}`;
+//var authToken = `Bearer ${token}`;
+var authToken = `Bearer ${token.sggToken}`;
 
 function getTotalAttendees(args, msgChannel) {
 
@@ -61,24 +61,22 @@ function getTotalAttendees(args, msgChannel) {
 
 function getTop8(args, msgChannel) {
 
-    var ownerId = sggVariables.lizardKingOwnerId;
-    var perPageTourney = 1;
+    var tourneySlug = process.env.TOURNEY_SLUG;
     var perPageStandings = 8;
 
-    var query = `query TournamentsByOwner($perPageTourney: Int!, $ownerId: ID!, $perPageStandings: Int!) {
-    tournaments(query: {
-      perPage: $perPageTourney
-      filter: {
-        ownerId: $ownerId
+    var query = `query GetTop8BySlug($tourneySlug: String!, $perPageStandings: Int!) {
+  tournament(slug: $tourneySlug) {
+    id
+    name
+    state
+    events{
+      videogame{
+        id
+        name
       }
-    }) {
-    nodes {
-      id
-      name
-      events{
         name
         numEntrants
-        standings(query: {
+      standings(query: {
       perPage: $perPageStandings
     }){
       nodes {
@@ -92,7 +90,6 @@ function getTop8(args, msgChannel) {
         }
       }
     }
-      }
     }
   }
 }`;
@@ -108,8 +105,7 @@ function getTop8(args, msgChannel) {
         body: JSON.stringify({
             query,
             variables: {
-                ownerId,
-                perPageTourney,
+                tourneySlug,
                 perPageStandings
             },
         })
@@ -119,8 +115,8 @@ function getTop8(args, msgChannel) {
 
         var i = 0;
         var found = false;
-        while (i < resBody.data.tournaments.nodes[0].events.length) {
-            if (resBody.data.tournaments.nodes[0].events[i].name.includes("Smash Ultimate") || resBody.data.tournaments.nodes[0].events[i].name.includes("Ultimate Singles")) {
+        while (i < resBody.data.tournament.events.length) {
+            if (resBody.data.tournament.events[i].videogame.id == 1386) {
                 found = true;
                 break;
             }
@@ -128,12 +124,12 @@ function getTop8(args, msgChannel) {
         }
 
         if (!found) {
-            gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
+            gf.sendMessage("Could not find Smash Ultimate tournament or event. Is the tournament found in Smash.gg?", msgChannel);
             return;
         }
 
-        var entrants = resBody.data.tournaments.nodes[0].events[i].standings.nodes;
-        var formattedEntrants = resBody.data.tournaments.nodes[0].name + " (" + resBody.data.tournaments.nodes[0].events[i].numEntrants + " Entrants)\n";
+        var entrants = resBody.data.tournament.events[i].standings.nodes;
+        var formattedEntrants = resBody.data.tournament.events[i].videogame.name + " (" + resBody.data.tournament.events[i].numEntrants + " Entrants)\n";
         i = 0;
         while (i < entrants.length) {
             // Assuming seeds[] only has 1 bracket/no pools. Otherwise, it should be like top8WithArgs()
