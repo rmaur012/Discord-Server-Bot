@@ -23,7 +23,7 @@ function getTotalAttendees(args, msgChannel) {
             tourneySlug = tourneySlug + '-' + args[i];
         }
     }
-    
+
     var query = `query AttendeeCount($tourneySlug: String!) {
   tournament(slug: $tourneySlug) {
     id
@@ -52,7 +52,7 @@ function getTotalAttendees(args, msgChannel) {
         })
     }, function (error, response, body) {
         var resBody = JSON.parse(body);
-//        console.log(resBody);
+        //        console.log(resBody);
         var tname = resBody.data.tournament.participants.pageInfo.total;
         if (body) {
             gf.sendMessage(tname, msgChannel);
@@ -131,6 +131,7 @@ function getTop8(args, msgChannel) {
 
         if (!found) {
             gf.sendMessage("Could not find Smash Ultimate tournament or event. Is the tournament found in Smash.gg?", msgChannel);
+            console.log("Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG);
             return;
         }
 
@@ -146,8 +147,8 @@ function getTop8(args, msgChannel) {
             gf.sendMessage(formattedEntrants, msgChannel);
         } else {
             gf.sendMessage("No body found in reply.", msgChannel);
-            console.log('error: ' + response.statusCode)
-            console.log(body)
+            console.warn('error: ' + response.statusCode)
+            console.warn(body)
         }
     });
 }
@@ -215,6 +216,7 @@ function getTop8ByArgs(args, msgChannel) {
 
         if (!found) {
             gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
+            console.log("Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG);
             return;
         }
 
@@ -231,8 +233,8 @@ function getTop8ByArgs(args, msgChannel) {
             gf.sendMessage(formattedEntrants, msgChannel);
         } else {
             gf.sendMessage("No body found in reply.", msgChannel);
-            console.log('error: ' + response.statusCode)
-            console.log(body)
+            console.warn('error: ' + response.statusCode)
+            console.warn(body)
         }
     });
 }
@@ -285,11 +287,13 @@ function getPoolAndMatches(args, msgChannel) {
 
         if (resBody.errors != undefined && resBody.errors.length > 0) {
             gf.sendMessage("Error Found: " + resBody.errors[0].message, msgChannel);
+            console.warn("Error Found: " + resBody.errors[0].message);
             return;
         }
 
         if (resBody.data.tournament.participants.nodes.length == 0) {
             gf.sendMessage("Player Id could not be found to then find in tournament.", msgChannel);
+            console.log("Player ID not found.");
             return;
         }
 
@@ -383,6 +387,7 @@ function getPoolAndMatches(args, msgChannel) {
 
             if (!found) {
                 gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
+                console.log("Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG);
                 return;
             }
 
@@ -411,6 +416,7 @@ function getPoolAndMatches(args, msgChannel) {
 
             if (gamerTag == "" || poolIdentifier == "" || sets.length == 0) {
                 gf.sendMessage("Gamertag, Pool or Sets couldn't be found.", msgChannel);
+                console.log("Gamertag, Pool or Sets couldn't be found.");
                 return
             }
 
@@ -478,7 +484,6 @@ function getPoolAndMatches(args, msgChannel) {
 
 function setTournamentSlug(args, msgChannel) {
 
-
     var tourneySlug = args[0];
     for (var i = 1; i < args.length; i = i + 1) {
         tourneySlug = tourneySlug + '-' + args[i].toLocaleLowerCase();
@@ -530,8 +535,8 @@ function setTournamentSlug(args, msgChannel) {
                 gf.sendMessage("Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
             } else {
                 gf.sendMessage("Tournament Slug could not be stored! Try again.", msgChannel);
-                console.log('error: ' + response.statusCode)
-                console.log(body)
+                console.warn('error: ' + response.statusCode)
+                console.warn(body)
             }
         });
     });
@@ -629,8 +634,8 @@ module.exports = {
                 break;
 
             case 'set':
-                if (args[0] == undefined) {
-                    gf.sendMessage('No tournament names given.', msgChannel);
+                if (args.length == 0) {
+                    gf.sendMessage("The current tournament slug saved is '" + process.env.TOURNEY_SLUG + "'", msgChannel);
                     return;
                 }
 

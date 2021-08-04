@@ -127,7 +127,7 @@ module.exports = {
                 return;
 
             case 'sgg':
-                gf.sendMessage('`!sgg [att|t8] (tourney name)` - `att` gives you the number of attendants to a specified tournament, which is required. `t8` gives the top 8 and their seed for a specified tournament. If `t8` isn\'t given a tournament, it will assume you want the latest Rex Baron results.', msgChannel);
+                gf.sendMessage('`!sgg [att|t8|set] (tourney name)` - `att` gives you the number of attendants to a specified tournament, uses slug unless tournament specified. `t8` gives the top 8 and their seed for a specified tournament, uses slug unless tournament specified. `set` allows you to set the tournament slug for smash.gg, shows the current slug if no tournament is stated.', msgChannel);
                 return;
 
             default:
