@@ -15,18 +15,18 @@
   "license": "ISC",
   "dependencies": {
     "discord.io": "github:woor/discord.io#gateway_v6",
-    "discord.js": "^11.3.0",
+    "discord.js": ">=11.3.0",
     "extend": ">=3.0.2",
     "ffmpeg": "0.0.4",
-    "ffmpeg-binaries": "^3.2.2-3",
+    "ffmpeg-binaries": ">=3.2.2-3",
     "googleapis": ">=66.0.0",
     "graphql": ">=15.5.0",
     "minimist": ">=0.2.1",
-    "opusscript": "0.0.6",
-    "request": "2.88.0",
+    "opusscript": "0.0.8",
+    "request": "2.88.2",
     "tar": ">=6.1.2",
-    "winston": "^2.4.0",
+    "winston": ">=2.4.0",
     "ws": ">=5.2.3",
-    "ytdl-core": "^0.20.1"
+    "ytdl-core": ">=0.20.1"
   }
 }

@@ -245,7 +245,6 @@ function getPoolAndMatches(args, msgChannel) {
     var playerTag = args[0];
     for (var i = 1; i < args.length; i = i + 1) {
         playerTag = playerTag + " " + args[i].toLocaleLowerCase();
-
     }
 
     var perPage = 100;
@@ -283,7 +282,7 @@ function getPoolAndMatches(args, msgChannel) {
         })
     }, function (error, response, body) {
         var resBody = JSON.parse(body);
-        //        console.log(resBody);
+        //console.log(resBody);
 
         if (resBody.errors != undefined && resBody.errors.length > 0) {
             gf.sendMessage("Error Found: " + resBody.errors[0].message, msgChannel);
@@ -313,7 +312,7 @@ function getPoolAndMatches(args, msgChannel) {
       	}
       phases{
         name
-        phaseGroups{
+        phaseGroups(query:{perPage:64}){
           nodes{
             displayIdentifier
             seeds(query:{
@@ -368,7 +367,7 @@ function getPoolAndMatches(args, msgChannel) {
             })
         }, function (error, response, body) {
             var resBody = JSON.parse(body);
-            //            console.log(resBody);
+            //console.log(resBody);
 
             if (resBody.errors != undefined && resBody.errors.length > 0) {
                 gf.sendMessage("Error Found: " + resBody.errors[0].message, msgChannel);
@@ -376,25 +375,27 @@ function getPoolAndMatches(args, msgChannel) {
             }
 
             var i = 0;
-            var found = false;
+            var biggestEventIndex = -1;
+            var maxEntrants = 0;
             while (i < resBody.data.tournament.events.length) {
-                if (resBody.data.tournament.events[i].videogame.id == 1386 && resBody.data.tournament.events[i].type == 1) {
-                    found = true;
-                    break;
+                if (resBody.data.tournament.events[i].videogame.id == 1386 && resBody.data.tournament.events[i].type == 1 &&
+                    resBody.data.tournament.events[i].numEntrants > maxEntrants) {
+                    biggestEventIndex = i;
+                    maxEntrants = resBody.data.tournament.events[i].numEntrants
                 }
                 i = i + 1;
             }
 
-            if (!found) {
+            if (!maxEntrants) {
                 gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
                 console.log("Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG);
                 return;
             }
 
-            var totalEventEntrants = resBody.data.tournament.events[i].numEntrants;
+            var totalEventEntrants = resBody.data.tournament.events[biggestEventIndex].numEntrants;
 
             // Extract Gamertag, their pool, and the sets of that pool
-            var allPools = resBody.data.tournament.events[i].phases[0].phaseGroups.nodes;
+            var allPools = resBody.data.tournament.events[biggestEventIndex].phases[0].phaseGroups.nodes;
             var gamerTag = "",
                 placement = -1,
                 poolIdentifier = "",
@@ -414,9 +415,9 @@ function getPoolAndMatches(args, msgChannel) {
                 focusedPool = focusedPool + 1;
             }
 
-            if (gamerTag == "" || poolIdentifier == "" || sets.length == 0) {
-                gf.sendMessage("Gamertag, Pool or Sets couldn't be found.", msgChannel);
-                console.log("Gamertag, Pool or Sets couldn't be found.");
+            if (gamerTag == "" || poolIdentifier == "") {
+                gf.sendMessage("Gamertag or Pool couldn't be found.", msgChannel);
+                console.log("Gamertag or Pool couldn't be found.");
                 return
             }
 
@@ -428,24 +429,32 @@ function getPoolAndMatches(args, msgChannel) {
 
             var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
 
+            console.log("Sets Count: " + sets.length);
+
             var focusedSet = 0;
             var winnersMatches = [],
                 losersMatches = [];
             while (focusedSet < sets.length) {
 
-                if (sets[focusedSet].slots[0].entrant != null && sets[focusedSet].slots[1].entrant != null) {
-                    if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag) || sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-                        if (sets[focusedSet].round > 0) {
-                            winnersMatches.push(sets[focusedSet]);
-                        } else {
-                            losersMatches.push(sets[focusedSet]);
-                        }
+                //                if (sets[focusedSet].slots[0].entrant != null && sets[focusedSet].slots[1].entrant != null) {
+                if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag) || sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
+                    if (sets[focusedSet].round > 0) {
+                        winnersMatches.push(sets[focusedSet]);
+                    } else {
+                        losersMatches.push(sets[focusedSet]);
                     }
                 }
+                //                }
                 focusedSet = focusedSet + 1;
             }
-            var sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
 
+            console.log("Winners Count: " + winnersMatches.length);
+            console.log("Losers Count: " + losersMatches.length);
+            var sortedMatches = [];
+            if(winnersMatches.length != 0){
+               sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
+            }
+            
             focusedSet = 0;
             while (focusedSet < sortedMatches.length) {
                 if (sortedMatches[focusedSet].slots[0].entrant == null) {
@@ -466,7 +475,9 @@ function getPoolAndMatches(args, msgChannel) {
                 focusedSet = focusedSet + 1;
             }
 
-            completeInfo = completeInfo + "Placement: " + placement;
+            if (placement != null) {
+                completeInfo = completeInfo + "Placement: " + placement;
+            }
 
             if (body) {
                 gf.sendMessage(completeInfo, msgChannel);
