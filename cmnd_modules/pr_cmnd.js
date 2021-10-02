@@ -1,17 +1,17 @@
 var gf = require('../generalFunc.js');
 
 var prList = 
-    "_Q4 2019 SFL PR_\n" +
-    "1. MuteAce\n" +
-    "2. 8BitMan\n" +
-    "3. ZekeTRP\n" +
-    "4. Morpheus\n" +
-    "5. Anathema\n" +
-    "6. Juanpi\n" +
-    "7. Chocotaco\n" +
-    "8. NickRiddle\n" +
-    "9. Xavi\n" +
-    "10. Diabeo";
+    "_Q3 2021 SFL PR_\n" +
+    "1. Anathema\n" +
+    "2. Chunkykong\n" +
+    "3. MuteAce\n" +
+    "4. Chocotaco\n" +
+    "5. Riku\n" +
+    "6. FlashBlaziken\n" +
+    "7. Juanpi\n" +
+    "8. Grimm\n" +
+    "9. Dominator\n" +
+    "10. Flip";
 
 module.exports = {
     act: function (msgChannel) {
