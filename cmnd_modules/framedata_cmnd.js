@@ -99,6 +99,7 @@ var specialUrlEntries = {
     'sheik': 'sheik',
     'shulk': 'shulk',
     'simon': 'simon',
+    'sora': 'sora',
     'whip': 'simon',
     'snake': 'snake',
     'sonic': 'sonic',

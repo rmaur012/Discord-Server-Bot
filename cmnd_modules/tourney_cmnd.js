@@ -62,9 +62,9 @@ module.exports = {
                     displayTourneyInfo(tourneys.nxt, msgChannel);
                 }
                 break;
-            case 'ppg':
+            case 'esa':
                 {
-                    displayTourneyInfo(tourneys.ppg, msgChannel);
+                    displayTourneyInfo(tourneys., msgChannel);
                 }
                 break;
             default:

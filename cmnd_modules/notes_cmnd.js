@@ -112,6 +112,7 @@ var x_axis = {
     'whip': 'BO',
     'snake': 'AG',
     'sonic': 'AL',
+    
     'steve': 'BZ',
     'terry': 'BW',
     'tlink': 'AQ',
@@ -236,6 +237,7 @@ var y_axis = {
     'whip': '67',
     'snake': '33',
     'sonic': '38',
+    'sora': '82',
     'steve': '78',
     'terry': '75',
     'tlink': '43',
