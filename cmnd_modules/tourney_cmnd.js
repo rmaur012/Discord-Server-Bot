@@ -64,7 +64,7 @@ module.exports = {
                 break;
             case 'esa':
                 {
-                    displayTourneyInfo(tourneys., msgChannel);
+                    displayTourneyInfo(tourneys.esa, msgChannel);
                 }
                 break;
             default:
