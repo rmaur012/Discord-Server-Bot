@@ -71,7 +71,7 @@ module.exports = {
             case 'wp':
             case 'wpg':
                 {
-                    displayTourneyInfo(tourneys.esa, msgChannel);
+                    displayTourneyInfo(tourneys.wp, msgChannel);
                 }
                 break;
             default:
