@@ -67,6 +67,13 @@ module.exports = {
                     displayTourneyInfo(tourneys.esa, msgChannel);
                 }
                 break;
+            case 'wolf':
+            case 'wp':
+            case 'wpg':
+                {
+                    displayTourneyInfo(tourneys.esa, msgChannel);
+                }
+                break;
             default:
                 gf.sendMessage('Could not find tournament info.', msgChannel);
         }

@@ -28,7 +28,7 @@
         "stream": "https://www.twitch.tv/rexbaronboca"
     },
     "flynns": {
-        "bracket": "Search for Flynns on SmashGG because they like things being difficult for literally no reason.\nhttps://www.smash.gg",
+        "bracket": "https://smash.gg/flynnsgamingfl",
         "stream": "https://www.twitch.tv/flynnsgamingfl"
     },
     "nxt": {
@@ -38,5 +38,9 @@
     "esa": {
         "bracket": "This is the TO's SmashGG page so you can find the latest bracket there: https://smash.gg/user/ec691d1c",
         "stream": "https://www.twitch.tv/Esportarenamiami"
+    },
+    "wp": {
+        "bracket": "This is the TO's SmashGG page so you can find the latest bracket there: https://smash.gg/user/5fc3864f",
+        "stream": "https://www.twitch.tv/wolfpack_gaming_sfl"
     }
 }
