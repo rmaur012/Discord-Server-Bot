@@ -261,159 +261,13 @@ var y_axis = {
 const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 //const TOKEN_PATH = 'token.json';
 
-
-function loadAndRunRead(args, channel) {
-
-    authorize(JSON.parse(process.env.CREDENTIALS_JSON), readMUNotes, args, channel);
-
-    //Use the commented code below for local development
-    // Load client secrets from a local file.
-    //    fs.readFile('credentials.json', (err, content) => {
-    //        if (err) return console.log('Error loading client secret file:', err);
-    //        // Authorize a client with credentials, then call the Google Sheets API.
-    //        authorize(JSON.parse(content), readMUNotes, args, channel);
-    //    });
-}
-
-function loadAndRunWrite(args, channel) {
-    authorize(JSON.parse(process.env.CREDENTIALS_JSON), writeMUNotes, args, channel);
-
-    // Load client secrets from a local file.
-    //    fs.readFile('credentials.json', (err, content) => {
-    //        if (err) return console.log('Error loading client secret file:', err);
-    //        // Authorize a client with credentials, then call the Google Sheets API.
-    //        authorize(JSON.parse(content), writeMUNotes, args);
-    //    });
-}
-
-/**
- * Create an OAuth2 client with the given credentials, and then execute the
- * given callback function.
- * @param {Object} credentials The authorization client credentials.
- * @param {function} callback The callback to call with the authorized client.
- */
-function authorize(credentials, callback, args, channel) {
-    const {
-        client_secret,
-        client_id,
-        redirect_uris
-    } = credentials.installed;
-    const oAuth2Client = new google.auth.OAuth2(
-        client_id, client_secret, redirect_uris[0]);
-
-    if (process.env.GOOGLE_SHEETS_TOKEN) {
-        oAuth2Client.setCredentials(JSON.parse(process.env.GOOGLE_SHEETS_TOKEN));
-        callback(oAuth2Client, args, channel);
-    } else {
-        getNewToken(oAuth2Client, callback, args, channel)
-    }
-
-    //Use this commented code only for local development
-    // Check if we have previously stored a token.
-    //    fs.readFile(TOKEN_PATH, (err, token) => {
-    //        if (err) return getNewToken(oAuth2Client, callback, args, channel);
-    //        if (token.length == 0) {
-    //            getNewToken(oAuth2Client, callback, args, channel)
-    //        } else {
-    //            oAuth2Client.setCredentials(JSON.parse(token));
-    //            callback(oAuth2Client, args, channel);
-    //        }
-    //    });
-}
-
-/**
- * Get and store new token after prompting for user authorization, and then
- * execute the given callback with the authorized OAuth2 client.
- * @param {google.auth.OAuth2} oAuth2Client The OAuth2 client to get token for.
- * @param {getEventsCallback} callback The callback for the authorized client.
- */
-function getNewToken(oAuth2Client, callback, args, channel) {
-    const authUrl = oAuth2Client.generateAuthUrl({
-        access_type: 'offline',
-        scope: SCOPES,
-    });
-    //    console.log('We must get a new token before accessing notes. After doing that, run your request again.', authUrl);
-    //    console.log('Authorize this app by visiting this url, copy the code, and run the command *!notes sc (code)*:', authUrl);
-    gf.sendMessage("We must get a new token before accessing notes. After doing that, run your request again.\nAuthorize this app by visiting this url, copy the code, and run the command *!notes sc (code)*: " + authUrl, channel);
-}
-
-function setNewToken(credentials, code, channel) {
-    if (process.env.GOOGLE_SHEETS_TOKEN.length) {
-        gf.sendMessage("A token is already stored!", channel);
-        return;
-    }
-
-    const {
-        client_secret,
-        client_id,
-        redirect_uris
-    } = credentials.installed;
-    const oAuth2Client = new google.auth.OAuth2(
-        client_id, client_secret, redirect_uris[0]);
-
-
-    //Use this commented section only locally when developing
-    // Check if we have previously stored a token.
-    //    fs.readFile(TOKEN_PATH, (err, token) => {
-    //        if (err) return getNewToken(oAuth2Client, callback);
-    //
-    //        // If a token already exists, don't put new token.
-    //        if (token.length) {
-    //            gf.sendMessage("A token is already stored!", channel);
-    //            return;
-    //        }
-    //    });
-    try {
-        oAuth2Client.getToken(code, (err, token) => {
-            if (err) return console.error('Error while trying to retrieve access token', err);
-            oAuth2Client.setCredentials(token);
-
-            console.log("Token is: " + JSON.stringify(token));
-
-            // HTTP request to set the token as a config variable on Heroku
-            request({
-                method: 'PATCH',
-                uri: `https://api.heroku.com/apps/${process.env.APP_NAME}/config-vars`,
-                //                uri: `https://api.heroku.com/apps/${process.env.BOT_TOKEN}/config-vars`,
-                headers: {
-                    Accept: 'application/vnd.heroku+json; version=3',
-                    Authorization: `Bearer ${process.env.HEROKU_BEARER}`,
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    GOOGLE_SHEETS_TOKEN: JSON.stringify(token)
-                })
-            }, function (error, response, body) {
-                if (response.statusCode == 200) {
-                    gf.sendMessage("Token Stored!", channel);
-                } else {
-                    gf.sendMessage("Token could not be stored! Try again.", msgChannel);
-                    console.log('error: ' + response.statusCode)
-                    console.log(body)
-                }
-            });
-
-            //Use this part below locally when developing
-            // Store the token to disk for later program executions
-            //            fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) => {
-            //                if (err) return console.error(err);
-            //                console.log('Token stored to', TOKEN_PATH);
-            //                gf.sendMessage("Token Stored!", channel);
-            //            });
-        })
-    } catch (err) {
-        console.log('ERROR: ' + err);
-        gf.sendMessage("Something went wrong entering a new token! Please do the process again.", channel);
-    }
-}
-
-function readMUNotes(auth, args, channel) {
+function readMUNotes(args, channel) {
     var matchupRange = 'Matchup Notes!' + x_axis[args[1].toLowerCase()] + y_axis[args[0].toLowerCase()];
     console.log('Read Range is: ' + matchupRange);
 
     const sheets = google.sheets({
         version: 'v4',
-        auth
+        auth: process.env.API_KEY
     });
     sheets.spreadsheets.values.get({
         spreadsheetId: process.env.SPREADSHEET_ID,
@@ -446,8 +300,13 @@ function generateWriteString(args) {
 }
 
 function writeToCell(sheets, body, matchupRange, channel) {
+    const key = process.env.JWT_SERVICE_KEY
+
+    const jwt = new google.auth.JWT(key.client_email, null, key.private_key, SCOPES)
+    
     sheets.spreadsheets.values.update({
         spreadsheetId: process.env.SPREADSHEET_ID,
+        auth: jwt,
         range: matchupRange,
         valueInputOption: 'RAW',
         resource: body
@@ -457,13 +316,13 @@ function writeToCell(sheets, body, matchupRange, channel) {
     });
 }
 
-function writeMUNotes(auth, args, channel) {
+function writeMUNotes(args, channel) {
     var matchupRange = 'Matchup Notes!' + x_axis[args[1].toLowerCase()] + y_axis[args[0].toLowerCase()];
     console.log('Write Range is: ' + matchupRange);
 
     const sheets = google.sheets({
         version: 'v4',
-        auth
+        auth: process.env.API_KEY
     });
 
     sheets.spreadsheets.values.get({
@@ -506,7 +365,7 @@ module.exports = {
             console.log(args);
         }
         if (x_axis[args[1].toLowerCase()] != undefined && y_axis[args[0].toLowerCase()] != undefined) {
-            loadAndRunRead(args, msgChannel);
+            readMUNotes(args, msgChannel);
         } else {
             gf.sendMessage("One or both characters submitted is invalid.", msgChannel);
         }
@@ -526,26 +385,9 @@ module.exports = {
         }
         console.log("Found args: " + args);
         if (x_axis[args[1].toLowerCase()] != undefined && y_axis[args[0].toLowerCase()] != undefined) {
-            loadAndRunWrite(args, msgChannel);
+            writeMUNotes(args, msgChannel);
         } else {
             gf.sendMessage("One or both characters submitted is invalid.", msgChannel);
         }
-    },
-
-    setCode: function (args, msgChannel) {
-        if (args.length == 0) {
-            gf.sendMessage("What is the code to authorize the bot?", msgChannel);
-            return;
-        }
-
-        setNewToken(JSON.parse(process.env.CREDENTIALS_JSON), args[0], msgChannel);
-
-        //Use this commented code for local development only
-        //        fs.readFile('credentials.json', (err, content) => {
-        //            if (err) return console.log('Error loading client secret file:', err);
-        //            // Authorize a client with credentials, then call the Google Sheets API.
-        //            setNewToken(JSON.parse(content), args[0], msgChannel);
-        //        });
-
     }
 };
