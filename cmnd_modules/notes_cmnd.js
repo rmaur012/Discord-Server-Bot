@@ -300,9 +300,10 @@ function generateWriteString(args) {
 }
 
 function writeToCell(sheets, body, matchupRange, channel) {
-    const key = process.env.JWT_SERVICE_KEY
+    const key = JSON.parse(process.env.JWT_SERVICE_KEY)
 
     const jwt = new google.auth.JWT(key.client_email, null, key.private_key, SCOPES)
+    console.log('Attempting Updating Values Now...');
     
     sheets.spreadsheets.values.update({
         spreadsheetId: process.env.SPREADSHEET_ID,
