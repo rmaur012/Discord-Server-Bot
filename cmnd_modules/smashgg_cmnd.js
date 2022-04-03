@@ -540,7 +540,7 @@ function setTournamentSlug(args, msgChannel) {
         }, function (error, response, body) {
             if (response.statusCode == 200) {
                 gf.sendMessage("Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
-                gf.logInfo(gf.LogsEnum.warn, "Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
+                gf.logInfo(gf.LogsEnum.log, "Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
             } else {
                 gf.sendMessage("Tournament Slug could not be stored! Try again.", msgChannel);
                 gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
@@ -630,12 +630,15 @@ module.exports = {
         switch (subCmd) {
             case 'att':
                 getTotalAttendees(args, msgChannel);
+                gf.logInfo(gf.LogsEnum.log, "Smash GG 'att' command called in #" + msgChannel.name, msgChannel);
                 break;
 
             case 't8':
                 if (args.length == 0) {
+                    gf.logInfo(gf.LogsEnum.log, "Smash GG 't8' command called with no args in #" + msgChannel.name, msgChannel);
                     getTop8(args, msgChannel);
                 } else {
+                    gf.logInfo(gf.LogsEnum.log, "Smash GG 't8' command called with args in #" + msgChannel.name, msgChannel);
                     getTop8ByArgs(args, msgChannel);
                 }
                 break;
@@ -656,6 +659,7 @@ module.exports = {
                     gf.sendMessage('No gamertags given.', msgChannel);
                     return;
                 }
+                gf.logInfo(gf.LogsEnum.log, "Smash GG command to fetch pool info called in #" + msgChannel.name, msgChannel);
                 getPoolAndMatches(args, msgChannel);
 
                 break;
