@@ -1,20 +1,10 @@
 var gf = require('../generalFunc.js');
 
-var prList = 
-    "_Q3 2021 SFL PR_\n" +
-    "1. Anathema\n" +
-    "2. Chunkykong\n" +
-    "3. MuteAce\n" +
-    "4. Chocotaco\n" +
-    "5. Riku\n" +
-    "6. FlashBlaziken\n" +
-    "7. Juanpi\n" +
-    "8. Grimm\n" +
-    "9. Dominator\n" +
-    "10. Flip";
+var prList = "https://twitter.com/Aerodusk/status/1510044345260462082?s=20&t=QgmeZe1e_l_GPdrQPnsORg";
 
 module.exports = {
     act: function (msgChannel) {
         gf.sendMessage(prList, msgChannel);
+        gf.logInfo(gf.LogsEnum.log, "PR Tweet Sent in #" + msgChannel.name, msgChannel);
     }
 };

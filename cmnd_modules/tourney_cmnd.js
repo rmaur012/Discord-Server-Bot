@@ -3,6 +3,7 @@ const tourneys = require('../cmnd_helpers/tourneys.json');
 
 function displayTourneyInfo(place, msgChannel) {
     gf.sendMessage('Bracket: ' + place.bracket + '\nStream: ' + place.stream, msgChannel);
+    gf.logInfo(gf.LogsEnum.log, "Stream Info called for " + place.bracket + " in #" + msgChannel.name, msgChannel);
 }
 
 module.exports = {

@@ -23,9 +23,6 @@ bot.on("ready", () => {
 });
 
 bot.on("message", (message) => {
-    /*if (message.content.startsWith("ping")) {
-        message.channel.send("pong!");
-    }*/
     var msgChannel = message.channel;
 
     var enabledCheckingForChannelNames = true;
@@ -80,6 +77,7 @@ bot.on("message", (message) => {
 
             case 'guildname':
                 gf.sendMessage("We got: " + message.guild.name, msgChannel);
+                
                 break;
 
                 // Music commands are retired

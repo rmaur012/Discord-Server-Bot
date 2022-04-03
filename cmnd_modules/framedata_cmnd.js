@@ -137,6 +137,7 @@ module.exports = {
             return;
         } else {
             gf.sendMessage("https://ultimateframedata.com/" + characterURLExtension + ".php", msgChannel);
+            gf.logInfo(gf.LogsEnum.log, "Frame data URL called for " + characterURLExtension + " in #" + msgChannel.name, msgChannel);
             return;
         }
     }

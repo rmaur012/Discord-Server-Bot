@@ -112,7 +112,7 @@ var x_axis = {
     'whip': 'BO',
     'snake': 'AG',
     'sonic': 'AL',
-    
+
     'steve': 'BZ',
     'terry': 'BW',
     'tlink': 'AQ',
@@ -263,7 +263,7 @@ const SCOPES = ['https://www.googleapis.com/auth/spreadsheets'];
 
 function readMUNotes(args, channel) {
     var matchupRange = 'Matchup Notes!' + x_axis[args[1].toLowerCase()] + y_axis[args[0].toLowerCase()];
-    console.log('Read Range is: ' + matchupRange);
+    gf.logInfo(gf.LogsEnum.log, 'Read Range is: ' + matchupRange, channel);
 
     const sheets = google.sheets({
         version: 'v4',
@@ -275,7 +275,8 @@ function readMUNotes(args, channel) {
     }, (err, res) => {
         if (err)
             //gf.sendMessage(`Something went wrong: ${err}`, msgChannel);
-            return console.log('The API returned an error: ' + err);
+            gf.logInfo(gf.LogsEnum.warn, 'The API returned an error: ' + err, channel);
+            return;
         const rows = res.data.values;
         if (rows != undefined && rows.length) {
             // Print columns A and E, which correspond to indices 0 and 4.
@@ -303,8 +304,8 @@ function writeToCell(sheets, body, matchupRange, channel) {
     const key = JSON.parse(process.env.JWT_SERVICE_KEY)
 
     const jwt = new google.auth.JWT(key.client_email, null, key.private_key, SCOPES)
-    console.log('Attempting Updating Values Now...');
-    
+    gf.logInfo(gf.LogsEnum.log, 'Attempting Updating Values Now...', channel);
+
     sheets.spreadsheets.values.update({
         spreadsheetId: process.env.SPREADSHEET_ID,
         auth: jwt,
@@ -312,14 +313,14 @@ function writeToCell(sheets, body, matchupRange, channel) {
         valueInputOption: 'RAW',
         resource: body
     }).then((response) => {
-        console.log("Response is: " + response);
+        gf.logInfo(gf.LogsEnum.log, "Response is: " + response, channel);
         gf.sendMessage(`Cell Updated!`, channel);
     });
 }
 
 function writeMUNotes(args, channel) {
     var matchupRange = 'Matchup Notes!' + x_axis[args[1].toLowerCase()] + y_axis[args[0].toLowerCase()];
-    console.log('Write Range is: ' + matchupRange);
+    gf.logInfo(gf.LogsEnum.log, 'Write Range is: ' + matchupRange, channel);
 
     const sheets = google.sheets({
         version: 'v4',
@@ -365,9 +366,12 @@ module.exports = {
             args.push(args[0]);
             console.log(args);
         }
+        gf.logInfo(gf.LogsEnum.log, "Found args: " + args, msgChannel);
         if (x_axis[args[1].toLowerCase()] != undefined && y_axis[args[0].toLowerCase()] != undefined) {
+            gf.logInfo(gf.LogsEnum.log, "Read notes successfully called!", msgChannel);
             readMUNotes(args, msgChannel);
         } else {
+            gf.logInfo(gf.LogsEnum.log, "Read notes call failed!", msgChannel);
             gf.sendMessage("One or both characters submitted is invalid.", msgChannel);
         }
 
@@ -384,10 +388,12 @@ module.exports = {
             gf.sendMessage("What are your notes that you want to write for this matchup?", msgChannel);
             return;
         }
-        console.log("Found args: " + args);
+        gf.logInfo(gf.LogsEnum.log, "Found args: " + args, msgChannel);
         if (x_axis[args[1].toLowerCase()] != undefined && y_axis[args[0].toLowerCase()] != undefined) {
+            gf.logInfo(gf.LogsEnum.log, "Write notes successfully called!", msgChannel);
             writeMUNotes(args, msgChannel);
         } else {
+            gf.logInfo(gf.LogsEnum.log, "Write notes call failed!", msgChannel);
             gf.sendMessage("One or both characters submitted is invalid.", msgChannel);
         }
     }

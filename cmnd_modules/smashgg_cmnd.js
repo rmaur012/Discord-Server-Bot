@@ -58,8 +58,7 @@ function getTotalAttendees(args, msgChannel) {
             gf.sendMessage(tname, msgChannel);
         } else {
             gf.sendMessage("No body found in reply.", msgChannel);
-            console.log('error: ' + response.statusCode)
-            console.log(body)
+            gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
         }
     });
 
@@ -131,7 +130,7 @@ function getTop8(args, msgChannel) {
 
         if (!found) {
             gf.sendMessage("Could not find Smash Ultimate tournament or event. Is the tournament found in Smash.gg?", msgChannel);
-            console.log("Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG);
+            gf.logInfo(gf.LogsEnum.log, "Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG, msgChannel);
             return;
         }
 
@@ -147,8 +146,7 @@ function getTop8(args, msgChannel) {
             gf.sendMessage(formattedEntrants, msgChannel);
         } else {
             gf.sendMessage("No body found in reply.", msgChannel);
-            console.warn('error: ' + response.statusCode)
-            console.warn(body)
+            gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
         }
     });
 }
@@ -216,7 +214,7 @@ function getTop8ByArgs(args, msgChannel) {
 
         if (!found) {
             gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
-            console.log("Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG);
+            gf.logInfo(gf.LogsEnum.log, "Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG, msgChannel);
             return;
         }
 
@@ -233,8 +231,7 @@ function getTop8ByArgs(args, msgChannel) {
             gf.sendMessage(formattedEntrants, msgChannel);
         } else {
             gf.sendMessage("No body found in reply.", msgChannel);
-            console.warn('error: ' + response.statusCode)
-            console.warn(body)
+            gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
         }
     });
 }
@@ -286,13 +283,13 @@ function getPoolAndMatches(args, msgChannel) {
 
         if (resBody.errors != undefined && resBody.errors.length > 0) {
             gf.sendMessage("Error Found: " + resBody.errors[0].message, msgChannel);
-            console.warn("Error Found: " + resBody.errors[0].message);
+            gf.logInfo(gf.LogsEnum.warn, "Error Found: " + resBody.errors[0].message, msgChannel);
             return;
         }
 
         if (resBody.data.tournament.participants.nodes.length == 0) {
             gf.sendMessage("Player Id could not be found to then find in tournament.", msgChannel);
-            console.log("Player ID not found.");
+            gf.logInfo(gf.LogsEnum.log, "Player ID not found.", msgChannel);
             return;
         }
 
@@ -388,7 +385,7 @@ function getPoolAndMatches(args, msgChannel) {
 
             if (!maxEntrants) {
                 gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
-                console.log("Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG);
+                gf.logInfo(gf.LogsEnum.log, "Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG, msgChannel);
                 return;
             }
 
@@ -417,7 +414,7 @@ function getPoolAndMatches(args, msgChannel) {
 
             if (gamerTag == "" || poolIdentifier == "") {
                 gf.sendMessage("Gamertag or Pool couldn't be found.", msgChannel);
-                console.log("Gamertag or Pool couldn't be found.");
+                gf.logInfo(gf.LogsEnum.log, "Gamertag or Pool couldn't be found.", msgChannel);
                 return
             }
 
@@ -429,7 +426,7 @@ function getPoolAndMatches(args, msgChannel) {
 
             var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
 
-            console.log("Sets Count: " + sets.length);
+            gf.logInfo(gf.LogsEnum.log, "Sets Count: " + sets.length, msgChannel);
 
             var focusedSet = 0;
             var winnersMatches = [],
@@ -448,8 +445,8 @@ function getPoolAndMatches(args, msgChannel) {
                 focusedSet = focusedSet + 1;
             }
 
-            console.log("Winners Count: " + winnersMatches.length);
-            console.log("Losers Count: " + losersMatches.length);
+            gf.logInfo(gf.LogsEnum.log, "Winners Count: " + winnersMatches.length, msgChannel);
+            gf.logInfo(gf.LogsEnum.log, "Losers Count: " + losersMatches.length, msgChannel);
             var sortedMatches = [];
             if(winnersMatches.length != 0){
                sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
@@ -483,8 +480,7 @@ function getPoolAndMatches(args, msgChannel) {
                 gf.sendMessage(completeInfo, msgChannel);
             } else {
                 gf.sendMessage("No body found in reply.", msgChannel);
-                console.log('error: ' + response.statusCode)
-                console.log(body)
+                gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
             }
         });
 
@@ -544,10 +540,10 @@ function setTournamentSlug(args, msgChannel) {
         }, function (error, response, body) {
             if (response.statusCode == 200) {
                 gf.sendMessage("Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
+                gf.logInfo(gf.LogsEnum.warn, "Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
             } else {
                 gf.sendMessage("Tournament Slug could not be stored! Try again.", msgChannel);
-                console.warn('error: ' + response.statusCode)
-                console.warn(body)
+                gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
             }
         });
     });
