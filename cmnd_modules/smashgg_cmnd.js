@@ -3,6 +3,9 @@ const request = require('request');
 const sggVariables = require('../cmnd_helpers/smashgg.json');
 
 const token = process.env.SMASHGG_TOKEN;
+const tourneySlugGlobal = process.env.TOURNEY_SLUG;
+const appNameGlobal = process.env.APP_NAME;
+const herokuBearerGlobal = process.env.HEROKU_BEARER;
 var authToken = `Bearer ${token}`;
 //const token = require('../smashggToken.json');
 //var authToken = `Bearer ${token.sggToken}`;
@@ -16,7 +19,7 @@ function getTotalAttendees(args, msgChannel) {
     var tourneySlug = "";
 
     if (args[0] == undefined) {
-        tourneySlug = process.env.TOURNEY_SLUG;
+        tourneySlug = tourneySlugGlobal;
     } else {
         tourneySlug = args[0];
         for (var i = 1; i < args.length; i = i + 1) {
@@ -66,7 +69,7 @@ function getTotalAttendees(args, msgChannel) {
 
 function getTop8(args, msgChannel) {
 
-    var tourneySlug = process.env.TOURNEY_SLUG;
+    var tourneySlug = tourneySlugGlobal;
     var perPageStandings = 8;
 
     var query = `query GetTop8BySlug($tourneySlug: String!, $perPageStandings: Int!) {
@@ -130,7 +133,7 @@ function getTop8(args, msgChannel) {
 
         if (!found) {
             gf.sendMessage("Could not find Smash Ultimate tournament or event. Is the tournament found in Smash.gg?", msgChannel);
-            gf.logInfo(gf.LogsEnum.log, "Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG, msgChannel);
+            gf.logInfo(gf.LogsEnum.log, "Could not find Smash Ultimate Tournament with slug: " + tourneySlugGlobal, msgChannel);
             return;
         }
 
@@ -214,7 +217,7 @@ function getTop8ByArgs(args, msgChannel) {
 
         if (!found) {
             gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
-            gf.logInfo(gf.LogsEnum.log, "Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG, msgChannel);
+            gf.logInfo(gf.LogsEnum.log, "Could not find Smash Ultimate Tournament with slug: " + tourneySlugGlobal, msgChannel);
             return;
         }
 
@@ -238,7 +241,7 @@ function getTop8ByArgs(args, msgChannel) {
 
 function getPoolAndMatches(args, msgChannel) {
 
-    var tourneySlug = process.env.TOURNEY_SLUG;
+    var tourneySlug = tourneySlugGlobal;
     var playerTag = args[0];
     for (var i = 1; i < args.length; i = i + 1) {
         playerTag = playerTag + " " + args[i].toLocaleLowerCase();
@@ -309,9 +312,10 @@ function getPoolAndMatches(args, msgChannel) {
       	}
       phases{
         name
-        phaseGroups(query:{perPage:64}){
+        phaseGroups(query:{perPage:64, entrantIds:[$playerId]}){
           nodes{
             displayIdentifier
+            startAt
             seeds(query:{
               filter: {
                 entrantName: $playerTag
@@ -385,7 +389,7 @@ function getPoolAndMatches(args, msgChannel) {
 
             if (!maxEntrants) {
                 gf.sendMessage("Could not find Smash Ultimate tournament. Is the tournament found in Smash.gg?", msgChannel);
-                gf.logInfo(gf.LogsEnum.log, "Could not find Smash Ultimate Tournament with slug: " + process.env.TOURNEY_SLUG, msgChannel);
+                gf.logInfo(gf.LogsEnum.log, "Could not find Smash Ultimate Tournament with slug: " + tourneySlugGlobal, msgChannel);
                 return;
             }
 
@@ -396,7 +400,8 @@ function getPoolAndMatches(args, msgChannel) {
             var gamerTag = "",
                 placement = -1,
                 poolIdentifier = "",
-                sets = [].
+                startAt = null;
+                sets = [],
             globalSeed = -1;
             var focusedPool = 0;
             while (focusedPool < allPools.length) {
@@ -406,6 +411,7 @@ function getPoolAndMatches(args, msgChannel) {
                     globalSeed = allPools[focusedPool].seeds.nodes[0].seedNum;
                     placement = allPools[focusedPool].seeds.nodes[0].placement;
                     poolIdentifier = allPools[focusedPool].displayIdentifier;
+                    startAt = allPools[focusedPool].startAt;
                     sets = allPools[focusedPool].seeds.nodes[0].phaseGroup.sets.nodes;
                     break;
                 }
@@ -424,7 +430,13 @@ function getPoolAndMatches(args, msgChannel) {
                 poolIdentifier = "Pool " + poolIdentifier;
             }
 
-            var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
+            if(startAt == null){
+               var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
+            } else {
+                var date = new Date(startAt*1000);
+                var completeInfo = gamerTag + " -> " + poolIdentifier + " [Starts on " + date.toLocaleDateString("en-US") + " @ " + date.toLocaleTimeString("en-US") + " EST]" + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
+            }
+            
 
             gf.logInfo(gf.LogsEnum.log, "Sets Count: " + sets.length, msgChannel);
 
@@ -527,11 +539,11 @@ function setTournamentSlug(args, msgChannel) {
 
         request({
             method: 'PATCH',
-            uri: `https://api.heroku.com/apps/${process.env.APP_NAME}/config-vars`,
+            uri: `https://api.heroku.com/apps/${appNameGlobal}/config-vars`,
             //                uri: `https://api.heroku.com/apps/${process.env.BOT_TOKEN}/config-vars`,
             headers: {
                 Accept: 'application/vnd.heroku+json; version=3',
-                Authorization: `Bearer ${process.env.HEROKU_BEARER}`,
+                Authorization: `Bearer ${herokuBearerGlobal}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
@@ -645,7 +657,7 @@ module.exports = {
 
             case 'set':
                 if (args.length == 0) {
-                    gf.sendMessage("The current tournament slug saved is '" + process.env.TOURNEY_SLUG + "'", msgChannel);
+                    gf.sendMessage("The current tournament slug saved is '" + tourneySlugGlobal + "'", msgChannel);
                     return;
                 }
 
