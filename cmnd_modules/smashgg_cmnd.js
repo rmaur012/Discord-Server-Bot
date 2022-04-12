@@ -434,7 +434,7 @@ function getPoolAndMatches(args, msgChannel) {
                var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
             } else {
                 var date = new Date(startAt*1000);
-                var completeInfo = gamerTag + " -> " + poolIdentifier + " [Starts on " + date.toLocaleDateString("en-US") + " @ " + date.toLocaleTimeString("en-US") + " EST]" + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
+                var completeInfo = gamerTag + " -> " + poolIdentifier + " [Starts on " + date.toLocaleDateString("en-US") + " @ " + date.toLocaleTimeString("en-US",{ timeZone: 'America/New_York', timeZoneName: 'short' }) + "/EST]" + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
             }
             
 
