@@ -336,6 +336,10 @@ function getPoolAndMatches(args, msgChannel) {
                       slots{
                         entrant{
                           name
+                          standing {
+                            isFinal
+                            placement
+                          }
                         }
                       }
                     }
@@ -401,8 +405,8 @@ function getPoolAndMatches(args, msgChannel) {
                 placement = -1,
                 poolIdentifier = "",
                 startAt = null;
-                sets = [],
-            globalSeed = -1;
+            sets = [],
+                globalSeed = -1;
             var focusedPool = 0;
             while (focusedPool < allPools.length) {
                 //            console.log(allPools[focusedPool].displayIdentifier + " " + allPools[focusedPool].seeds.nodes.length);
@@ -430,13 +434,16 @@ function getPoolAndMatches(args, msgChannel) {
                 poolIdentifier = "Pool " + poolIdentifier;
             }
 
-            if(startAt == null){
-               var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
+            if (startAt == null) {
+                var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
             } else {
-                var date = new Date(startAt*1000);
-                var completeInfo = gamerTag + " -> " + poolIdentifier + " [Starts on " + date.toLocaleDateString("en-US") + " @ " + date.toLocaleTimeString("en-US",{ timeZone: 'America/New_York', timeZoneName: 'short' }) + "/EST]" + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
+                var date = new Date(startAt * 1000);
+                var completeInfo = gamerTag + " -> " + poolIdentifier + " [Starts on " + date.toLocaleDateString("en-US") + " @ " + date.toLocaleTimeString("en-US", {
+                    timeZone: 'America/New_York',
+                    timeZoneName: 'short'
+                }) + "/EST]" + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
             }
-            
+
 
             gf.logInfo(gf.LogsEnum.log, "Sets Count: " + sets.length, msgChannel);
 
@@ -460,10 +467,12 @@ function getPoolAndMatches(args, msgChannel) {
             gf.logInfo(gf.LogsEnum.log, "Winners Count: " + winnersMatches.length, msgChannel);
             gf.logInfo(gf.LogsEnum.log, "Losers Count: " + losersMatches.length, msgChannel);
             var sortedMatches = [];
-            if(winnersMatches.length != 0){
-               sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
+            if (winnersMatches.length != 0) {
+                sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
             }
-            
+
+            var finalPlacementStr = checkForAndReturnFinalPlacement(sortedMatches, gamerTag, totalEventEntrants);
+
             focusedSet = 0;
             while (focusedSet < sortedMatches.length) {
                 if (sortedMatches[focusedSet].slots[0].entrant == null) {
@@ -484,8 +493,9 @@ function getPoolAndMatches(args, msgChannel) {
                 focusedSet = focusedSet + 1;
             }
 
-            if (placement != null) {
-                completeInfo = completeInfo + "Placement: " + placement;
+
+            if (finalPlacementStr.length != 0) {
+                completeInfo = completeInfo + finalPlacementStr;
             }
 
             if (body) {
@@ -627,6 +637,19 @@ function sortPlayersSets(winners, losers) {
 //    }
 //    console.log(string);
 //}
+
+function checkForAndReturnFinalPlacement(srtMatches, focusedPlayer, totalPlayers) {
+    if (srtMatches[0].slots[0].entrant.standing == null) {
+        return ""
+    }
+
+    if (srtMatches[0].slots[0].entrant.name.includes(focusedPlayer) && srtMatches[0].slots[0].entrant.standing.isFinal) {
+        return "Final Placing: " + srtMatches[0].slots[0].entrant.standing.placement + "/" + totalPlayers;
+    } else if (srtMatches[0].slots[1].entrant.name.includes(focusedPlayer) && srtMatches[0].slots[0].entrant.standing.isFinal) {
+        return "Final Placing: " + srtMatches[0].slots[1].entrant.standing.placement + "/" + totalPlayers;
+    }
+    return "";
+}
 
 module.exports = {
     act: function (args, msgChannel) {

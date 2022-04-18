@@ -53,23 +53,23 @@ bot.on("message", (message) => {
                 break;
 
                 // kh command is retired
-//            case 'kh':
-//                cmnds.kh.act(args, msgChannel);
-//                break;
+                //            case 'kh':
+                //                cmnds.kh.act(args, msgChannel);
+                //                break;
 
                 // mv command is retired
-//            case 'mv':
-//                cmnds.mv.act(msgChannel);
-//                break;
+                //            case 'mv':
+                //                cmnds.mv.act(msgChannel);
+                //                break;
 
             case 'help':
                 cmnds.help.act(args, msgChannel);
                 break;
 
                 //yt command is retired
-//            case 'yt':
-//                cmnds.yt.act(args, msgChannel);
-//                break;
+                //            case 'yt':
+                //                cmnds.yt.act(args, msgChannel);
+                //                break;
 
             case 'poll':
                 cmnds.poll.act(args, message);
@@ -77,26 +77,26 @@ bot.on("message", (message) => {
 
             case 'guildname':
                 gf.sendMessage("We got: " + message.guild.name, msgChannel);
-                
+
                 break;
 
                 // Music commands are retired
                 //Music commands---------------------
-//            case 'play':
-//                cmnds.music.play(args, message);
-//                break;
-//
-//            case 'queue':
-//                cmnds.music.queue(message);
-//                break;
-//
-//            case 'skip':
-//                cmnds.music.skip(message);
-//                break;
-//
-//            case 'stop':
-//                cmnds.music.stop(message);
-//                break;
+                //            case 'play':
+                //                cmnds.music.play(args, message);
+                //                break;
+                //
+                //            case 'queue':
+                //                cmnds.music.queue(message);
+                //                break;
+                //
+                //            case 'skip':
+                //                cmnds.music.skip(message);
+                //                break;
+                //
+                //            case 'stop':
+                //                cmnds.music.stop(message);
+                //                break;
                 //======================================
 
             case 'roulette':
@@ -108,74 +108,74 @@ bot.on("message", (message) => {
                     break;
                 }
 
-            case 'shoot':
-                if (gf.checkIfProperChannel("roulette", msgChannel, enabledCheckingForChannelNames)) {
-                    cmnds.roulette.shoot(msgChannel);
-                } else {
-                    gf.sendMessage("Please go to the roulette channel to play!", msgChannel);
-                }
-                break;
-                //======================================
-
-            case 'frame':
-                cmnds.frame.act(args, msgChannel);
-                break;
-
-            case 'lvr':
-                if (gf.checkIfProperChannel("lever", msgChannel, enabledCheckingForChannelNames)) {
-                    cmnds.lever.act(args, msgChannel);
-                } else {
-                    gf.sendMessage("Please go to the lever channel to play!", msgChannel);
-                }
-                break;
-
-            case 'stages':
-                cmnds.stages.act(msgChannel);
-                break;
-
-            case 'dict':
-                cmnds.dict.act(args, msgChannel);
-                break;
-
-            case 'ruleset':
-                cmnds.ruleset.act(args, msgChannel);
-                break;
-
-            case 'notes':
-                if (gf.checkIfProperChannel("notes", msgChannel, enabledCheckingForChannelNames)) {
-                    if (args[0] != undefined && args[0].toLowerCase() == 'w') {
-                        cmnds.notes.write(args.splice(1), msgChannel);
-                    } else if (args[0] != undefined && args[0].toLowerCase() == 'wg') {
-                        var character = args[1];
-                        var splicedArgs = args.splice(1);
-                        var charArgs = [character];
-                        var finalArgs = charArgs.concat(splicedArgs);
-                        cmnds.notes.write(finalArgs, msgChannel);
-                    } else if (args[0] != undefined && args[0].toLowerCase() == 'sc') {
-                        cmnds.notes.setCode(args.splice(1), msgChannel);
+                case 'shoot':
+                    if (gf.checkIfProperChannel("roulette", msgChannel, enabledCheckingForChannelNames)) {
+                        cmnds.roulette.shoot(msgChannel);
                     } else {
-                        cmnds.notes.read(args, msgChannel);
+                        gf.sendMessage("Please go to the roulette channel to play!", msgChannel);
                     }
-                } else {
-                    gf.sendMessage("Please go to the notes channel for all note requests!", msgChannel);
-                }
-                break;
+                    break;
+                    //======================================
 
-            case 'pr':
-                cmnds.pr.act(msgChannel);
-                break;
-                
-            case 'tw':
-                cmnds.twitch.act(args, msgChannel);
-                break;
-                
-            case 'sgg':
-                cmnds.sgg.act(args, msgChannel);
-                break;
+                case 'frame':
+                    cmnds.frame.act(args, msgChannel);
+                    break;
 
-            default:
-                gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
-                // Just add any case commands if you want to..
+                case 'lvr':
+                    if (gf.checkIfProperChannel("lever", msgChannel, enabledCheckingForChannelNames)) {
+                        cmnds.lever.act(args, msgChannel);
+                    } else {
+                        gf.sendMessage("Please go to the lever channel to play!", msgChannel);
+                    }
+                    break;
+
+                case 'stages':
+                    cmnds.stages.act(msgChannel);
+                    break;
+
+                case 'dict':
+                    cmnds.dict.act(args, msgChannel);
+                    break;
+
+                case 'ruleset':
+                    cmnds.ruleset.act(args, msgChannel);
+                    break;
+
+                case 'notes':
+                    if (gf.checkIfProperChannel("notes", msgChannel, enabledCheckingForChannelNames)) {
+                        if (args[0] != undefined && args[0].toLowerCase() == 'w') {
+                            cmnds.notes.write(args.splice(1), msgChannel);
+                        } else if (args[0] != undefined && args[0].toLowerCase() == 'wg') {
+                            var character = args[1];
+                            var splicedArgs = args.splice(1);
+                            var charArgs = [character];
+                            var finalArgs = charArgs.concat(splicedArgs);
+                            cmnds.notes.write(finalArgs, msgChannel);
+                        } else if (args[0] != undefined && args[0].toLowerCase() == 'sc') {
+                            cmnds.notes.setCode(args.splice(1), msgChannel);
+                        } else {
+                            cmnds.notes.read(args, msgChannel);
+                        }
+                    } else {
+                        gf.sendMessage("Please go to the notes channel for all note requests!", msgChannel);
+                    }
+                    break;
+
+                case 'pr':
+                    cmnds.pr.act(msgChannel);
+                    break;
+
+                case 'tw':
+                    cmnds.twitch.act(args, msgChannel);
+                    break;
+
+                case 'sgg':
+                    cmnds.sgg.act(args, msgChannel);
+                    break;
+
+                default:
+                    gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
+                    // Just add any case commands if you want to..
         }
     }
 });
