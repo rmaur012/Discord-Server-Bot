@@ -291,7 +291,7 @@ function getPoolAndMatches(args, msgChannel) {
         }
 
         if (resBody.data.tournament.participants.nodes.length == 0) {
-            gf.sendMessage("Player Id could not be found to then find in tournament.", msgChannel);
+            gf.sendMessage("Player could not be found in tournament.", msgChannel);
             gf.logInfo(gf.LogsEnum.log, "Player ID not found.", msgChannel);
             return;
         }
@@ -333,6 +333,7 @@ function getPoolAndMatches(args, msgChannel) {
                     nodes{
                       round
                       fullRoundText
+                      displayScore(mainEntrantId:$playerId)
                       slots{
                         entrant{
                           name
@@ -463,6 +464,8 @@ function getPoolAndMatches(args, msgChannel) {
                 gf.logInfo(gf.LogsEnum.log, "Losers Count: " + losersMatches.length, msgChannel);
                 if (winnersMatches.length != 0) {
                     sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
+                } else {
+                    sortedMatches = sortLosersMatches(losersMatches);
                 }
 
                 focusedSet = 0;
@@ -477,9 +480,9 @@ function getPoolAndMatches(args, msgChannel) {
                         }
                     } else {
                         if (sortedMatches[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
-                            completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[1].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
+                            completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[1].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")" + getSetCountString(sortedMatches[focusedSet].displayScore) + "\n";
                         } else if (sortedMatches[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-                            completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[0].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
+                            completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[0].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")" + getSetCountString(sortedMatches[focusedSet].displayScore) + "\n";
                         }
                     }
                     focusedSet = focusedSet + 1;
@@ -489,7 +492,7 @@ function getPoolAndMatches(args, msgChannel) {
                 focusedPhase = focusedPhase + 1;
             }
 
-            var finalPlacementStr = checkForAndReturnFinalPlacement(sortedMatches, gamerTag, totalEventEntrants);
+            var finalPlacementStr = checkForAndReturnFinalPlacement(sortedMatches, gamerTag, totalEventEntrants, msgChannel);
 
 
             if (finalPlacementStr.length != 0) {
@@ -502,117 +505,6 @@ function getPoolAndMatches(args, msgChannel) {
                 gf.sendMessage("No body found in reply.", msgChannel);
                 gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
             }
-
-
-
-
-            //------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-            // Extract Gamertag, their pool, and the sets of that pool
-            //            var allPools = resBody.data.tournament.events[biggestEventIndex].phases[0].phaseGroups.nodes;
-            //            var gamerTag = "",
-            //                placement = -1,
-            //                poolIdentifier = "",
-            //                startAt = null,
-            //                sets = [],
-            //                globalSeed = -1;
-            //            var focusedPool = 0;
-            //            while (focusedPool < allPools.length) {
-            //                //            console.log(allPools[focusedPool].displayIdentifier + " " + allPools[focusedPool].seeds.nodes.length);
-            //                if (allPools[focusedPool].seeds.nodes.length != 0 && allPools[focusedPool].seeds.nodes[0].players[0].gamerTag.toLowerCase().includes(playerTag)) {
-            //                    gamerTag = allPools[focusedPool].seeds.nodes[0].players[0].gamerTag;
-            //                    globalSeed = allPools[focusedPool].seeds.nodes[0].seedNum;
-            //                    placement = allPools[focusedPool].seeds.nodes[0].placement;
-            //                    poolIdentifier = allPools[focusedPool].displayIdentifier;
-            //                    startAt = allPools[focusedPool].startAt;
-            //                    sets = allPools[focusedPool].seeds.nodes[0].phaseGroup.sets.nodes;
-            //                    break;
-            //                }
-            //                focusedPool = focusedPool + 1;
-            //            }
-            //
-            //            if (gamerTag == "" || poolIdentifier == "") {
-            //                gf.sendMessage("Gamertag or Pool couldn't be found.", msgChannel);
-            //                gf.logInfo(gf.LogsEnum.log, "Gamertag or Pool couldn't be found.", msgChannel);
-            //                return
-            //            }
-            //
-            //            if (poolIdentifier == "1") {
-            //                poolIdentifier = "Main Bracket"
-            //            } else {
-            //                poolIdentifier = "Pool " + poolIdentifier;
-            //            }
-            //
-            //            if (startAt == null) {
-            //                var completeInfo = gamerTag + " -> " + poolIdentifier + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
-            //            } else {
-            //                var date = new Date(startAt * 1000);
-            //                var completeInfo = gamerTag + " -> " + poolIdentifier + " [Starts on " + date.toLocaleDateString("en-US") + " @ " + date.toLocaleTimeString("en-US", {
-            //                    timeZone: 'America/New_York',
-            //                    timeZoneName: 'short'
-            //                }) + "/EST]" + " (Seed #" + globalSeed + " of " + totalEventEntrants + ")\n"
-            //            }
-
-
-//            gf.logInfo(gf.LogsEnum.log, "Sets Count: " + sets.length, msgChannel);
-
-            //            var focusedSet = 0;
-            //            var winnersMatches = [],
-            //                losersMatches = [];
-            //            while (focusedSet < sets.length) {
-            //
-            //                //                if (sets[focusedSet].slots[0].entrant != null && sets[focusedSet].slots[1].entrant != null) {
-            //                if (sets[focusedSet].slots[0].entrant.name.includes(gamerTag) || sets[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-            //                    if (sets[focusedSet].round > 0) {
-            //                        winnersMatches.push(sets[focusedSet]);
-            //                    } else {
-            //                        losersMatches.push(sets[focusedSet]);
-            //                    }
-            //                }
-            //                //                }
-            //                focusedSet = focusedSet + 1;
-            //            }
-            //
-            //            gf.logInfo(gf.LogsEnum.log, "Winners Count: " + winnersMatches.length, msgChannel);
-            //            gf.logInfo(gf.LogsEnum.log, "Losers Count: " + losersMatches.length, msgChannel);
-            //            var sortedMatches = [];
-            //            if (winnersMatches.length != 0) {
-            //                sortedMatches = sortPlayersSets(winnersMatches, losersMatches);
-            //            }
-            //
-            ////            var finalPlacementStr = checkForAndReturnFinalPlacement(sortedMatches, gamerTag, totalEventEntrants);
-            //
-            //            focusedSet = 0;
-            //            while (focusedSet < sortedMatches.length) {
-            //                if (sortedMatches[focusedSet].slots[0].entrant == null) {
-            //                    if (sortedMatches[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-            //                        completeInfo = completeInfo + "Waiting for opponent in " + sortedMatches[focusedSet].fullRoundText;
-            //                    }
-            //                } else if (sortedMatches[focusedSet].slots[1].entrant == null) {
-            //                    if (sortedMatches[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
-            //                        completeInfo = completeInfo + "Waiting for opponent in " + sortedMatches[focusedSet].fullRoundText;
-            //                    }
-            //                } else {
-            //                    if (sortedMatches[focusedSet].slots[0].entrant.name.includes(gamerTag)) {
-            //                        completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[1].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
-            //                    } else if (sortedMatches[focusedSet].slots[1].entrant.name.includes(gamerTag)) {
-            //                        completeInfo = completeInfo + " Vs. " + sortedMatches[focusedSet].slots[0].entrant.name + " (" + sortedMatches[focusedSet].fullRoundText + ")\n";
-            //                    }
-            //                }
-            //                focusedSet = focusedSet + 1;
-            //            }
-
-
-            //            if (finalPlacementStr.length != 0) {
-            //                completeInfo = completeInfo + finalPlacementStr;
-            //            }
-            //
-            //            if (body) {
-            //                gf.sendMessage(completeInfo, msgChannel);
-            //            } else {
-            //                gf.sendMessage("No body found in reply.", msgChannel);
-            //                gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
-            //            }
         });
 
 
@@ -710,22 +602,10 @@ function sortPlayersSets(winners, losers) {
     }
 
     //Losers
-    for (i = 0; i < losers.length - 1; i = i + 1) {
-        smallestRoundInd = i;
-        for (j = i + 1; j < losers.length; j = j + 1) {
-            if (losers[j].round < losers[smallestRoundInd].round) {
-                smallestRoundInd = j;
-            }
-        }
-        temp = losers[smallestRoundInd];
-        losers[smallestRoundInd] = losers[i];
-        losers[i] = temp;
-    }
+    var srtLosers = sortLosersMatches(losers);
 
-    losers.reverse();
-
-    for (i = 0; i < losers.length; i = i + 1) {
-        winners.push(losers[i]);
+    for (i = 0; i < srtLosers.length; i = i + 1) {
+        winners.push(srtLosers[i]);
     }
 
     //Adding grand finals and/or reset if it was found before
@@ -747,17 +627,55 @@ function sortPlayersSets(winners, losers) {
 //    console.log(string);
 //}
 
-function checkForAndReturnFinalPlacement(srtMatches, focusedPlayer, totalPlayers) {
-    if (srtMatches[0].slots[0].entrant.standing == null) {
+function sortLosersMatches(losers){
+    for (i = 0; i < losers.length - 1; i = i + 1) {
+        smallestRoundInd = i;
+        for (j = i + 1; j < losers.length; j = j + 1) {
+            if (losers[j].round < losers[smallestRoundInd].round) {
+                smallestRoundInd = j;
+            }
+        }
+        temp = losers[smallestRoundInd];
+        losers[smallestRoundInd] = losers[i];
+        losers[i] = temp;
+    }
+    
+    return losers.reverse();
+}
+
+function checkForAndReturnFinalPlacement(srtMatches, focusedPlayer, totalPlayers, msgChannel) {
+    var lastMatchIndex = srtMatches.length-1;
+    if (srtMatches[lastMatchIndex].slots[0].entrant.standing == null) {
+        gf.logInfo(gf.LogsEnum.log, "Entrant standing not found.", msgChannel);
         return ""
     }
 
-    if (srtMatches[0].slots[0].entrant.name.includes(focusedPlayer) && srtMatches[0].slots[0].entrant.standing.isFinal) {
+    if (srtMatches[lastMatchIndex].slots[0].entrant.name.includes(focusedPlayer) && srtMatches[lastMatchIndex].slots[0].entrant.standing.isFinal) {
         return "Final Placing: " + srtMatches[0].slots[0].entrant.standing.placement + "/" + totalPlayers;
-    } else if (srtMatches[0].slots[1].entrant.name.includes(focusedPlayer) && srtMatches[0].slots[0].entrant.standing.isFinal) {
+    } else if (srtMatches[lastMatchIndex].slots[1].entrant.name.includes(focusedPlayer) && srtMatches[lastMatchIndex].slots[1].entrant.standing.isFinal) {
         return "Final Placing: " + srtMatches[0].slots[1].entrant.standing.placement + "/" + totalPlayers;
     }
+    gf.logInfo(gf.LogsEnum.log, "Entrant standing is not finalized.", msgChannel);
     return "";
+}
+
+function getSetCountString(displayScoreStr) {
+    if(displayScoreStr == null){
+       return "";
+    }
+    
+    if(displayScoreStr == "DQ"){
+       return " -> DQ";
+    }
+    
+    var leftNum = parseInt(displayScoreStr.charAt(0)), 
+        rightNum = parseInt(displayScoreStr.charAt(displayScoreStr.length-1));
+    
+    if(leftNum > rightNum){
+       return " -> Won " + displayScoreStr;
+    } else {
+       return " -> Lost " + displayScoreStr;
+    }
 }
 
 module.exports = {
