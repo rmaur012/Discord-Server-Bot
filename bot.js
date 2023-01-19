@@ -1,12 +1,14 @@
-const { Client, GatewayIntentBits } = require("discord.js");
+const Discord = require("discord.js");
 var logger = require('winston');
-//const auth = require('./auth.json');
+const auth = require('./auth.json');
 const list = require('./cmnd_modules/cmnd_list.js');
 const gf = require('./generalFunc.js');
 
 var cmnds = list.getMap();
 
-const bot = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers] });
+const bot = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_PRESENCES", "GUILD_MEMBERS"] });
+
+//const bot = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildMembers]});
 
 /* Configure logger settings
 logger.remove(logger.transports.Console);
@@ -194,5 +196,5 @@ bot.on("messageCreate", (message) => {
 });
 
 
-//bot.login(auth.token);
-bot.login(process.env.BOT_TOKEN);
+bot.login(auth.token);
+//bot.login(process.env.BOT_TOKEN);
