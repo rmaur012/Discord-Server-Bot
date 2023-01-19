@@ -129,10 +129,12 @@ module.exports = {
             gf.sendMessage("What character do you want the frame data for?", msgChannel);
             return;
         }
+        
+        gf.logInfo(gf.LogsEnum.log, "Getting frame data link for " + args[0], msgChannel);
 
         var characterURLExtension = specialUrlEntries[args[0].toLowerCase()];
 
-        if (characterURLExtension == undefined) {
+        if (!(!!characterURLExtension)) {
             gf.sendMessage("Who this? Couldn't find them.", msgChannel);
             return;
         } else {

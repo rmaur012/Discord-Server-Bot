@@ -69,6 +69,7 @@ module.exports = {
                 }
                 break;
             case 'wolf':
+            case 'wolfpack':
             case 'wp':
             case 'wpg':
                 {

@@ -6,7 +6,7 @@ const gf = require('./generalFunc.js');
 
 var cmnds = list.getMap();
 
-const bot = new Discord.Client();
+const bot = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_PRESENCES", "GUILD_MEMBERS"] });
 
 /* Configure logger settings
 logger.remove(logger.transports.Console);
@@ -17,12 +17,17 @@ logger.level = 'debug';*/
 
 
 bot.on("ready", () => {
-    console.log("Ready.");
-    console.log(`Bot has started, with ${bot.users.size} users, in ${bot.channels.size} channels of ${bot.guilds.size} guilds.`);
+    console.log(`Bot is ready!`);
 
 });
 
-bot.on("message", (message) => {
+async function getUsers(){
+    await bot.gui
+    console.log(bot.users.size);
+}
+
+bot.on("messageCreate", (message) => {
+    console.log("Command: " + message.content);
     var msgChannel = message.channel;
 
     var enabledCheckingForChannelNames = true;
@@ -118,7 +123,11 @@ bot.on("message", (message) => {
                     //======================================
 
                 case 'frame':
-                    cmnds.frame.act(args, msgChannel);
+                    if (gf.checkIfProperChannel("frame", msgChannel, enabledCheckingForChannelNames)) {
+                        cmnds.frame.act(args, msgChannel);
+                    } else {
+                        gf.sendMessage("Please go to the frame channel for all frame requests!", msgChannel);
+                    }
                     break;
 
                 case 'lvr':
@@ -174,7 +183,11 @@ bot.on("message", (message) => {
                     break;
 
                 default:
-                    gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
+                    if (gf.checkIfProperChannel("frame", msgChannel, enabledCheckingForChannelNames)) {
+                        cmnds.frame.act([cmd], msgChannel);
+                    } else {
+                        gf.sendMessage('That command doesn\'t exist. Type *!help* for the command list.', msgChannel);
+                    }
                     // Just add any case commands if you want to..
         }
     }
