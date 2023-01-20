@@ -1,46 +1,30 @@
 {
-    "ao": {
-        "bracket": "https://arcadeodyssey.challonge.com/tournaments",
-        "stream": "https://www.twitch.tv/arcadeodyssey"
+    "unfun": {
+        "bracket": "https://start.gg/unfun",
+        "stream": "https://www.twitch.tv/unfunstuff"
     },
-    "vs": {
-        "bracket": "RIP VS \nhttps://versus.challonge.com/tournaments",
-        "stream": "https://www.twitch.tv/vsgc"
+    "sly": {
+        "bracket": "This is the TO's SmashGG page so you can find the latest bracket there: https://www.start.gg/user/5fc3864f",
+        "stream": "https://www.twitch.tv/slyfox_esports_fl"
     },
-    "ecg": {
+    "uvape": {
         "bracket": "http://ecgc.challonge.com/tournaments",
         "stream": "https://www.twitch.tv/eastcoastgamingfl"
     },
-    "mcc": {
-        "bracket": "http://mccomics.challonge.com/tournaments",
+    "gh": {
+        "bracket": "TBD",
         "stream": "Unavailable"
     },
-    "champloo": {
-        "bracket": "https://champloogaming.challonge.com/tournaments",
-        "stream": "https://www.twitch.tv/champloogamingtv"
-    },
-    "gypsy": {
-        "bracket": "https://challonge.com/users/gypsymoonvapinbrews/tournaments",
-        "stream": "https://www.twitch.tv/gypsymoontv"
-    },
-    "rex": {
-        "bracket": "https://smash.gg/rbb",
-        "stream": "https://www.twitch.tv/rexbaronboca"
+    "furia": {
+        "bracket": "https://start.gg/furiasmash",
+        "stream": "https://www.twitch.tv/furiatv"
     },
     "flynns": {
         "bracket": "https://smash.gg/flynnsgamingfl",
         "stream": "https://www.twitch.tv/flynnsgamingfl"
     },
-    "nxt": {
-        "bracket": "https://smash.gg/NXT",
-        "stream": "https://www.twitch.tv/schwi_riku_"
-    },
     "esa": {
         "bracket": "This is the TO's SmashGG page so you can find the latest bracket there: https://smash.gg/user/ec691d1c",
         "stream": "https://www.twitch.tv/Esportarenamiami"
-    },
-    "wp": {
-        "bracket": "This is the TO's SmashGG page so you can find the latest bracket there: https://smash.gg/user/5fc3864f",
-        "stream": "https://www.twitch.tv/wolfpack_gaming_sfl"
     }
 }

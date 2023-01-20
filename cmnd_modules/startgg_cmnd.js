@@ -310,8 +310,8 @@ function getPoolAndMatches(args, msgChannel) {
         }
 
         var playerId = getSinglesPlayerId(resBody.data.tournament.participants.nodes[0].entrants);
-        
-        if(playerId == 0){
+
+        if (playerId == 0) {
             gf.sendMessage("Could not find Smash Ultimate Singles event when trying to get ID", msgChannel);
             gf.logInfo(gf.LogsEnum.log, "Smash Ult Singles event not found when getting player ID.", msgChannel);
             return;
@@ -427,10 +427,10 @@ function getPoolAndMatches(args, msgChannel) {
                 gf.logInfo(gf.LogsEnum.log, "Could not find player in bracket for Smash Ultimate Singles with tag: " + playerTag, msgChannel);
                 return;
             }
-            
+
             console.log("Phase Groups: " + allPhases[0].phaseGroups);
-            
-            if(!(!!allPhases[0].phaseGroups.nodes[0].seeds.nodes[0])) {
+
+            if (!(!!allPhases[0].phaseGroups.nodes[0].seeds.nodes[0])) {
                 gf.sendMessage("Some issue occurred with getting phase groups...", msgChannel);
                 gf.logInfo(gf.LogsEnum.log, "Could not find player in bracket for Smash Ultimate Singles with tag: " + playerTag, msgChannel);
                 return;
@@ -583,38 +583,44 @@ function setTournamentSlug(args, msgChannel) {
             return;
         }
 
-        request({
-            method: 'PATCH',
-            uri: `https://api.heroku.com/apps/${appNameGlobal}/config-vars`,
-            //                uri: `https://api.heroku.com/apps/${process.env.BOT_TOKEN}/config-vars`,
-            headers: {
-                Accept: 'application/vnd.heroku+json; version=3',
-                Authorization: `Bearer ${herokuBearerGlobal}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                TOURNEY_SLUG: tourneySlug
-            })
-        }, function (error, response, body) {
-            if (response.statusCode == 200) {
-                tourneySlugGlobal = tourneySlug;
-                gf.logInfo(gf.LogsEnum.log, 'New Tourney Slug Global: ' + tourneySlugGlobal, msgChannel);
-                gf.sendMessage("Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
-                gf.logInfo(gf.LogsEnum.log, 'Status Code ' + response.statusCode + ", and error: " + error, msgChannel);
-                gf.logInfo(gf.LogsEnum.log, "Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
-            } else {
-                gf.sendMessage("Tournament Slug could not be stored! Try again.", msgChannel);
-                gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
-            }
-        });
+        tourneySlugGlobal = tourneySlug;
+        gf.logInfo(gf.LogsEnum.log, 'New Tourney Slug Global: ' + tourneySlugGlobal, msgChannel);
+        gf.sendMessage("Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
+        gf.logInfo(gf.LogsEnum.log, 'Status Code ' + response.statusCode + ", and error: " + error, msgChannel);
+        gf.logInfo(gf.LogsEnum.log, "Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
+
+        //        request({
+        //            method: 'PATCH',
+        //            uri: `https://api.heroku.com/apps/${appNameGlobal}/config-vars`,
+        //            //                uri: `https://api.heroku.com/apps/${process.env.BOT_TOKEN}/config-vars`,
+        //            headers: {
+        //                Accept: 'application/vnd.heroku+json; version=3',
+        //                Authorization: `Bearer ${herokuBearerGlobal}`,
+        //                'Content-Type': 'application/json'
+        //            },
+        //            body: JSON.stringify({
+        //                TOURNEY_SLUG: tourneySlug
+        //            })
+        //        }, function (error, response, body) {
+        //            if (response.statusCode == 200) {
+        //                tourneySlugGlobal = tourneySlug;
+        //                gf.logInfo(gf.LogsEnum.log, 'New Tourney Slug Global: ' + tourneySlugGlobal, msgChannel);
+        //                gf.sendMessage("Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
+        //                gf.logInfo(gf.LogsEnum.log, 'Status Code ' + response.statusCode + ", and error: " + error, msgChannel);
+        //                gf.logInfo(gf.LogsEnum.log, "Tournament Slug '" + tourneySlug + "' Stored!", msgChannel);
+        //            } else {
+        //                gf.sendMessage("Tournament Slug could not be stored! Try again.", msgChannel);
+        //                gf.logInfo(gf.LogsEnum.warn, 'Status Code ' + response.statusCode + ", and body: " + body, msgChannel);
+        //            }
+        //        });
     });
 }
 
 // var playerId = resBody.data.tournament.participants.nodes[0].entrants[0].id;
 function getSinglesPlayerId(entrantsArr) {
-    for(var i = 0; i < entrantsArr.length; i = i+1){
-        if(entrantsArr[i].event.name.includes("Ultimate") && entrantsArr[i].event.name.includes("Singles")){
-           return entrantsArr[i].id;
+    for (var i = 0; i < entrantsArr.length; i = i + 1) {
+        if (entrantsArr[i].event.name.includes("Ultimate") && entrantsArr[i].event.name.includes("Singles")) {
+            return entrantsArr[i].id;
         }
     }
     return 0;

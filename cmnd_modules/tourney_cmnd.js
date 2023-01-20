@@ -16,39 +16,31 @@ module.exports = {
         var type = args[0];
         type = type.toLowerCase();
         switch (type) {
-            case 'ao':
+            case 'unfun':
                 {
-                    displayTourneyInfo(tourneys.ao, msgChannel);
+                    displayTourneyInfo(tourneys.unfun, msgChannel);
                 }
                 break;
-            case 'vs':
+            case 'slyfox':
+            case 'sly:':
                 {
-                    displayTourneyInfo(tourneys.vs, msgChannel);
+                    displayTourneyInfo(tourneys.sly, msgChannel);
                 }
                 break;
-            case 'ecg':
+            case 'uvape':
                 {
-                    displayTourneyInfo(tourneys.ecg, msgChannel);
+                    displayTourneyInfo(tourneys.uvape, msgChannel);
                 }
                 break;
-            case 'mcc':
+            case 'gh':
+            case 'gamers':
                 {
-                    displayTourneyInfo(tourneys.mcc, msgChannel);
+                    displayTourneyInfo(tourneys.gh, msgChannel);
                 }
                 break;
-            case 'champloo':
+            case 'furia':
                 {
-                    displayTourneyInfo(tourneys.champloo, msgChannel);
-                }
-                break;
-            case 'gypsy':
-                {
-                    displayTourneyInfo(tourneys.gypsy, msgChannel);
-                }
-                break;
-            case 'rex':
-                {
-                    displayTourneyInfo(tourneys.rex, msgChannel);
+                    displayTourneyInfo(tourneys.furia, msgChannel);
                 }
                 break;
             case 'flynns':
@@ -58,22 +50,9 @@ module.exports = {
                     displayTourneyInfo(tourneys.flynns, msgChannel);
                 }
                 break;
-            case 'nxt':
-                {
-                    displayTourneyInfo(tourneys.nxt, msgChannel);
-                }
-                break;
             case 'esa':
                 {
                     displayTourneyInfo(tourneys.esa, msgChannel);
-                }
-                break;
-            case 'wolf':
-            case 'wolfpack':
-            case 'wp':
-            case 'wpg':
-                {
-                    displayTourneyInfo(tourneys.wp, msgChannel);
                 }
                 break;
             default:
